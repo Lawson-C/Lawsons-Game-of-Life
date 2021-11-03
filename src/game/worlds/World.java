@@ -17,9 +17,13 @@ public class World {
         int[] dim = this.data.size(); // dimensions of data grid
         for (int x = -dim[0]; x < dim[1]; x++) {
             for (int y = -dim[2]; y < dim[3]; y++) {
-                this.data.set(x, y, new Chunk(game, x, y, blockSize, g));
+                this.data.set(x, y, new Chunk(game, this, x, y, g));
             }
         }
+    }
+
+    public int getSize() {
+        return this.blockSize;
     }
 
     public void display() {

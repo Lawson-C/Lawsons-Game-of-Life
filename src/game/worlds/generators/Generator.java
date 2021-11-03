@@ -2,6 +2,7 @@ package game.worlds.generators;
 
 import game.worlds.Block;
 import game.worlds.Chunk;
+import game.worlds.World;
 
 public abstract class Generator {
     protected int size;
@@ -15,5 +16,5 @@ public abstract class Generator {
     }
 
     // generates a chunk's contents based on its index in a grid and its pointer
-    public abstract Block[][][] makeChunk(Chunk hood, int x, int y);
+    public abstract Block[][][] makeChunk(Chunk hood, World world, int x, int y);
 }
