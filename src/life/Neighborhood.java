@@ -3,7 +3,7 @@ package life;
 public class Neighborhood {
     Cell[][][] cells;
 
-    Neighborhood() {
+    public Neighborhood() {
     }
 
     public void display() {
