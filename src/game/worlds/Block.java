@@ -1,6 +1,7 @@
 package game.worlds;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public abstract class Block {
     protected PApplet game;
@@ -8,6 +9,7 @@ public abstract class Block {
     protected int size;
     protected Chunk hood;
     protected int indx, indy, indz; // indecies within chunk
+    protected PVector pos;
 
     public Block(PApplet game, World world, int size, Chunk hood, int indx, int indy, int indz) {
         this.game = game;
@@ -17,17 +19,17 @@ public abstract class Block {
         this.indx = indx;
         this.indy = indy;
         this.indz = indz;
+        this.pos = new PVector(this.indx * this.size, this.indy * this.size, this.indz * this.size);
     }
 
     public void transPos() {
-        this.game.translate((this.indx + (float) .5) * this.size, (this.indy + (float) .5) * this.size,
-                (this.indz + (float) .5) * this.size);
+        this.game.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2, this.pos.z + this.size / 2);
     }
 
     /*
-     * the design of the methods to show the block on screen is assures that the
-     * matrix is pushed and popped each time and that the block subclasses only have
-     * to worry about their visual style, not their coordinates.
+     * the design of the methods to show the block on screen is designed to assure
+     * that the matrix is pushed and popped each time and that the block subclasses
+     * only have to worry about their visual style, not their coordinates.
      * 
      * All this because I can't trust my future self...
      */
@@ -42,4 +44,12 @@ public abstract class Block {
      * Chunk 'hood' must call translate beforehand
      */
     public abstract void display();
+
+    public PVector getRawCoords() {
+        return new PVector().set(this.pos).add(this.hood.getRawCoords());
+    }
+
+    public PVector getCenter() {
+        return this.getRawCoords().add(this.size / 2, this.size / 2, this.size / 2);
+    }
 }
