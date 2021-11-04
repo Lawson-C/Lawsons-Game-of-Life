@@ -15,7 +15,6 @@ public class Player {
     }
 
     public void periodic() {
-        this.cam.update();
         this.cam.periodic();
     }
 
