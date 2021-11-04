@@ -49,6 +49,11 @@ class EpicCam {
 	}
 
 	public void periodic() {
+		this.update();
+		this.handleKeys();
+	}
+
+	public void handleKeys() {
 		this.mouseMove();
 		this.run();
 	}
