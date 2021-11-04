@@ -34,7 +34,6 @@ public class Chunk {
             }
         }
         this.game.popMatrix();
-        chunkStroke();
     }
 
     public void chunkStroke() {
@@ -74,7 +73,7 @@ public class Chunk {
     }
 
     public PVector getRawCoords() {
-        return new PVector(this.indx * this.rawWidth(), this.game.height - this.rawHeight(),
+        return new PVector(this.indx * this.rawWidth(), this.rawHeight(),
                 this.indz * this.rawWidth());
     }
 }

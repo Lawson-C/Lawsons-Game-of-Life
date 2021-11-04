@@ -46,7 +46,7 @@ public abstract class Block {
     public abstract void display();
 
     public PVector getRawCoords() {
-        return new PVector().set(this.pos).add(this.hood.getRawCoords());
+        return new PVector().set(this.hood.getRawCoords()).add(this.pos);
     }
 
     public PVector getCenter() {

@@ -12,8 +12,7 @@ public class GameApp extends PApplet {
 
     public GameApp(Generator g) {
         this.blockSize = g.getSize();
-        player = new Player(this);
-        world = new World(this, g, this.blockSize);
+        this.world = new World(this, g, this.blockSize);
         super.runSketch();
         // due to how processing works the rest of this constructor should be empty
         // (place init stuff in void settings())
@@ -21,6 +20,7 @@ public class GameApp extends PApplet {
 
     public void settings() {
         fullScreen(P3D, 0);
+        this.player = new Player(this, this.world.getSpawn());
     }
 
     public void draw() {
