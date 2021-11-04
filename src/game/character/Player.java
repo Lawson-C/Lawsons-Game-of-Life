@@ -1,5 +1,6 @@
 package game.character;
 
+import processing.core.PVector;
 import windows.GameApp;
 
 public class Player {
@@ -7,6 +8,10 @@ public class Player {
 
     public Player(GameApp game) {
         this.cam = new EpicCam(game);
+    }
+
+    public Player(GameApp game, PVector spawn) {
+        this.cam = new EpicCam(game, spawn);
     }
 
     public void periodic() {

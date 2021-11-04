@@ -4,10 +4,12 @@ import util.*;
 
 import game.worlds.generators.Generator;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class World {
     protected PApplet game;
     protected int blockSize;
+    protected PVector spawnPoint;
     protected Grid<Chunk> data;
 
     public World(PApplet game, Generator g, int blockSize) {
@@ -33,5 +35,13 @@ public class World {
                 this.data.get(x, y).display();
             }
         }
+    }
+
+    public PVector getSpawn() {
+        return this.spawnPoint;
+    }
+
+    public void setSpawn(float x, float y, float z) {
+        this.spawnPoint = new PVector(x, y, z);
     }
 }

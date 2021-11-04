@@ -8,17 +8,17 @@ import processing.core.PVector;
 import windows.GameApp;
 
 class EpicCam {
-	Robot bot;
-	GameApp game;
-	Controls controls;
+	private Robot bot;
+	private GameApp game;
+	private Controls controls;
 
-	float kHeight = 150;
-	float floor;
+	private float kHeight = 150;
+	private float floor;
 
-	PVector move = new PVector();
-	PVector position = new PVector();
-	PVector look = new PVector();
-	PVector camTran = new PVector();
+	private PVector move = new PVector();
+	private PVector position = new PVector();
+	private PVector look = new PVector();
+	private PVector camTran = new PVector();
 
 	public EpicCam(GameApp game) {
 		this.game = game;
@@ -30,6 +30,20 @@ class EpicCam {
 		}
 		this.position = new PVector();
 		this.floor = this.game.height;
+
+		this.controls = new Controls(this.game);
+	}
+
+	public EpicCam(GameApp game, PVector floor) {
+		this.game = game;
+
+		try {
+			this.bot = new Robot();
+		} catch (AWTException e) {
+			System.out.println("error with java.awt.robot class");
+		}
+		this.position = new PVector(floor.x, floor.y - this.kHeight, floor.z);
+		this.floor = floor.y;
 
 		this.controls = new Controls(this.game);
 	}
@@ -171,5 +185,9 @@ class EpicCam {
 
 	public void keyReleased(Character key) {
 		this.controls.keyReleased(key);
+	}
+
+	public float getHeight() {
+		return this.kHeight;
 	}
 }
