@@ -7,7 +7,7 @@ public class App {
     private static Life life;
 
     public static void main(String[] args) {
-        game = new GameApp(new Flat(100));
         life = new Life();
+        game = new GameApp(new Flat(100));
     }
 }
