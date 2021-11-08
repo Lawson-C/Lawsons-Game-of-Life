@@ -22,6 +22,10 @@ public class Player {
         return this.cam;
     }
 
+    public PVector getPos() {
+        return new PVector().set(this.cam.getPos());
+    }
+
     public void keyPressed(Character key) {
         this.cam.keyPressed(key);
     }

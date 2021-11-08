@@ -184,6 +184,10 @@ class EpicCam {
 		}
 	}
 
+	public PVector getPos() {
+		return this.position;
+	}
+
 	public void keyPressed(Character key) {
 		this.controls.keyPressed(key);
 	}
