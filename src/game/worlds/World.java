@@ -19,7 +19,7 @@ public class World {
         int[] dim = this.data.size(); // dimensions of data grid
         for (int x = -dim[0]; x < dim[1]; x++) {
             for (int y = -dim[2]; y < dim[3]; y++) {
-                this.data.set(x, y, new Chunk(game, this, x, y, g));
+                this.data.set(x, y, new Chunk(this, x, y, g));
             }
         }
     }
@@ -31,8 +31,8 @@ public class World {
     public void display(boolean loop) {
         Chunk centerChunk = this.getChunkRaw(this.game.getP1().getPos());
         int[] low = new int[] { centerChunk.getIndx() - this.renderDist, centerChunk.getIndz() - this.renderDist };
-        for (int x = low[0]; x < low[0] + 2 * this.renderDist; x++) {
-            for (int z = low[1]; z < low[1] + 2 * this.renderDist; z++) {
+        for (int x = low[0]; x <= low[0] + 2 * this.renderDist; x++) {
+            for (int z = low[1]; z <= low[1] + 2 * this.renderDist; z++) {
                 this.data.get(x, z).display();
             }
         }

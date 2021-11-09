@@ -6,16 +6,16 @@ import processing.core.PVector;
 
 public class Chunk {
     public static final int width = 8, height = 16;
+    public static int blockSize;
 
-    private static int blockSize;
     private PApplet game;
     private World world;
     private int indx, indz;
     private Block[][][] data;
 
-    public Chunk(PApplet game, World world, int indx, int indz, Generator g) {
+    public Chunk(World world, int indx, int indz, Generator g) {
         Chunk.blockSize = world.getSize();
-        this.game = game;
+        this.game = world.game;
         this.world = world;
         this.indx = indx;
         this.indz = indz;
@@ -53,6 +53,10 @@ public class Chunk {
 
     public PApplet getApplet() {
         return this.game;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     public int getIndx() {
