@@ -1,10 +1,12 @@
 package game.worlds;
 
+import java.util.HashMap;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public abstract class Block {
-    static final int low = 0;
+    protected static HashMap<Class, Integer> blockRanges = new HashMap<Class, Integer>();
 
     protected PApplet game;
     protected World world;
@@ -14,14 +16,16 @@ public abstract class Block {
     protected PVector pos;
     protected float state;
 
-    public Block(PApplet game, World world, int size, Chunk hood, int indx, int indy, int indz) {
-        this.game = game;
-        this.world = world;
-        this.size = size;
+    public Block(Chunk hood, int indx, int indy, int indz, float state) {
+        Block.blockRanges.put(this.getClass(), -1);
+        this.game = hood.getApplet();
+        this.world = hood.getWorld();
+        this.size = Chunk.blockSize;
         this.hood = hood;
         this.indx = indx;
         this.indy = indy;
         this.indz = indz;
+        this.state = state;
         this.pos = new PVector(this.indx * this.size, this.indy * this.size, this.indz * this.size);
     }
 
@@ -49,8 +53,11 @@ public abstract class Block {
     public abstract void display();
 
     public void updateState(float s) {
-        if (s < low) s = low;
-        if (s > low + 1) s = low + 1;
+        int low = range(this.getClass());
+        if (s < low)
+            s = low;
+        if (s > low + 1)
+            s = low + 1;
         this.state = s;
     }
 
@@ -60,5 +67,9 @@ public abstract class Block {
 
     public PVector getCenter() {
         return this.getRawCoords().add(this.size / 2, this.size / 2, this.size / 2);
+    }
+
+    public static int range(Class c) {
+        return blockRanges.get(c);
     }
 }
