@@ -49,6 +49,8 @@ public abstract class Block {
     public abstract void display();
 
     public void updateState(float s) {
+        if (s < low) s = low;
+        if (s > low + 1) s = low + 1;
         this.state = s;
     }
 
