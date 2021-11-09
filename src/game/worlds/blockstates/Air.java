@@ -6,8 +6,11 @@ import game.worlds.World;
 import processing.core.PApplet;
 
 public class Air extends Block {
+    static final int low = 1;
+
     public Air(PApplet game, World world, Chunk hood, int indx, int indy, int indz) {
         super(game, world, world.getSize(), hood, indx, indy, indz);
+        super.state = 2;
     }
 
     @Override

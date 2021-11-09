@@ -4,12 +4,15 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public abstract class Block {
+    static final int low = 0;
+
     protected PApplet game;
     protected World world;
     protected int size;
     protected Chunk hood;
     protected int indx, indy, indz; // indecies within chunk
     protected PVector pos;
+    protected float state;
 
     public Block(PApplet game, World world, int size, Chunk hood, int indx, int indy, int indz) {
         this.game = game;
@@ -44,6 +47,10 @@ public abstract class Block {
      * Chunk 'hood' must call translate beforehand
      */
     public abstract void display();
+
+    public void updateState(float s) {
+        this.state = s;
+    }
 
     public PVector getRawCoords() {
         return new PVector().set(this.hood.getRawCoords()).add(this.pos);
