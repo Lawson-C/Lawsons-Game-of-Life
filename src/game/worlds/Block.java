@@ -6,8 +6,6 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public abstract class Block {
-    protected static HashMap<Class, Integer> blockRanges = new HashMap<Class, Integer>();
-
     protected PApplet game;
     protected World world;
     protected int size;
@@ -17,7 +15,6 @@ public abstract class Block {
     protected float state;
 
     public Block(Chunk hood, int indx, int indy, int indz, float state) {
-        Block.blockRanges.put(this.getClass(), -1);
         this.game = hood.getApplet();
         this.world = hood.getWorld();
         this.size = Chunk.blockSize;
@@ -53,11 +50,10 @@ public abstract class Block {
     public abstract void display();
 
     public void updateState(float s) {
-        int low = range(this.getClass());
-        if (s < low)
-            s = low;
-        if (s > low + 1)
-            s = low + 1;
+        if (s < 0)
+            s = 0;
+        if (s > 1)
+            s = 1;
         this.state = s;
     }
 
@@ -67,9 +63,5 @@ public abstract class Block {
 
     public PVector getCenter() {
         return this.getRawCoords().add(this.size / 2, this.size / 2, this.size / 2);
-    }
-
-    public static int range(Class c) {
-        return blockRanges.get(c);
     }
 }
