@@ -4,9 +4,11 @@ import game.worlds.Block;
 import game.worlds.Chunk;
 
 public class Air extends Block {
+    static final int low = 0;
+
     public Air(Chunk hood, int indx, int indy, int indz, float state) {
-        super(hood, indx, indy, indz, state);
-        Block.blockRanges.put(this.getClass(), 0);
+        super(hood, indx, indy, indz, state + low);
+        Block.blockRanges.put(this.getClass(), low);
     }
 
     @Override
