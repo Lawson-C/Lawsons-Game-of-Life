@@ -7,25 +7,25 @@ import processing.core.PVector;
 public class Chunk {
     public static final int width = 8, height = 16;
 
+    private static int blockSize;
     private PApplet game;
     private World world;
     private int indx, indz;
-    private int blockSize;
     private Block[][][] data;
 
     public Chunk(PApplet game, World world, int indx, int indz, Generator g) {
+        Chunk.blockSize = world.getSize();
         this.game = game;
         this.world = world;
         this.indx = indx;
         this.indz = indz;
-        this.blockSize = world.getSize();
         this.data = g.makeChunk(this, this.world, indx, indz);
     }
 
+    /*
+     * world must call translate() beforehand
+     */
     public void display() {
-        this.game.pushMatrix();
-        PVector coords = this.getRawCoords();
-        this.game.translate(coords.x, coords.y, coords.z);
         for (int x = 0; x < Chunk.width; x++) {
             for (int y = 0; y < Chunk.height; y++) {
                 for (int z = 0; z < Chunk.width; z++) {
@@ -33,7 +33,6 @@ public class Chunk {
                 }
             }
         }
-        this.game.popMatrix();
     }
 
     public void chunkStroke() {
@@ -65,15 +64,29 @@ public class Chunk {
     }
 
     public int rawWidth() {
-        return Chunk.width * this.blockSize;
+        return Chunk.width * Chunk.blockSize;
     }
 
     public int rawHeight() {
-        return Chunk.height * this.blockSize;
+        return Chunk.height * Chunk.blockSize;
     }
 
     public PVector getRawCoords() {
-        return new PVector(this.indx * this.rawWidth(), this.rawHeight(),
-                this.indz * this.rawWidth());
+        return new PVector(this.indx * this.rawWidth(), this.rawHeight(), this.indz * this.rawWidth());
+    }
+
+    // y is unnecessary
+    public static PVector convertRaw(int x, int z) {
+        return new PVector(x * Chunk.width * Chunk.blockSize, Chunk.height, z * Chunk.width * Chunk.blockSize);
+    }
+
+    public void updateStates(float[][][] s) {
+        for (int x = 0; x < Chunk.width; x++) {
+            for (int y = 0; y < Chunk.height; y++) {
+                for (int z = 0; z < Chunk.width; z++) {
+                    this.data[x][y][z].updateState(s[x][y][z]);
+                }
+            }
+        }
     }
 }
