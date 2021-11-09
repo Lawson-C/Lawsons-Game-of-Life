@@ -13,7 +13,7 @@ public class Neighborhood {
         for (int x = 0; x < lx; x++) {
             for (int y = 0; y < ly; y++) {
                 for (int z = 0; z < lz; z++) {
-                    float state = p.getState(x, y, z, 0, 1);
+                    float state = p.getState(x, y, z);
                     this.cells[x][y][z] = new Cell(window, x, y, z, state);
                 }
             }
