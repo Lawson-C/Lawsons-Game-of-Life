@@ -10,6 +10,9 @@ public class Air extends Block {
 
     @Override
     public void display() {
-        // its air you can't even see it (usually?)
+        /*
+         * super.game.noStroke(); super.game.fill(255, super.state * 10);
+         * super.game.box(super.size);
+         */
     }
 }

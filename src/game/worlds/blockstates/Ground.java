@@ -10,9 +10,8 @@ public class Ground extends Block {
 
     @Override
     public void display() {
-        super.game.stroke(0);
-        super.game.strokeWeight(1);
-        super.game.fill(205);
+        super.game.noStroke();
+        super.game.fill(10 * super.state);
         super.game.box(super.size);
     }
 }
