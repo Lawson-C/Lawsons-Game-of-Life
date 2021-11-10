@@ -41,9 +41,9 @@ public class Chunk {
         this.game.stroke(255, 0, 0);
         this.game.strokeWeight(5);
         PVector coords = this.getRawCoords();
-        this.game.translate(coords.x + this.rawWidth() / 2, coords.y + this.rawHeight() / 2,
-                coords.z + this.rawWidth() / 2);
-        this.game.box(this.rawWidth(), this.rawHeight(), this.rawWidth());
+        this.game.translate(coords.x + Chunk.rawWidth() / 2, coords.y + Chunk.rawHeight() / 2,
+                coords.z + Chunk.rawWidth() / 2);
+        this.game.box(Chunk.rawWidth(), Chunk.rawHeight(), Chunk.rawWidth());
         this.game.popMatrix();
     }
 
@@ -77,11 +77,6 @@ public class Chunk {
 
     public PVector getRawCoords() {
         return new PVector(this.indx * Chunk.rawWidth(), Chunk.rawHeight(), this.indz * Chunk.rawWidth());
-    }
-
-    // y is unnecessary
-    public static PVector convertRaw(int x, int z) {
-        return new PVector(x * Chunk.width * Chunk.blockSize, Chunk.height, z * Chunk.width * Chunk.blockSize);
     }
 
     public void updateStates(float[][][] s) {
