@@ -67,16 +67,16 @@ public class Chunk {
         return indz;
     }
 
-    public int rawWidth() {
+    public static int rawWidth() {
         return Chunk.width * Chunk.blockSize;
     }
 
-    public int rawHeight() {
+    public static int rawHeight() {
         return Chunk.height * Chunk.blockSize;
     }
 
     public PVector getRawCoords() {
-        return new PVector(this.indx * this.rawWidth(), this.rawHeight(), this.indz * this.rawWidth());
+        return new PVector(this.indx * Chunk.rawWidth(), Chunk.rawHeight(), this.indz * Chunk.rawWidth());
     }
 
     // y is unnecessary
