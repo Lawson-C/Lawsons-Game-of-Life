@@ -29,11 +29,15 @@ public class World {
     }
 
     public void display(boolean loop) {
-        Chunk centerChunk = this.getChunkRaw(this.game.getP1().getPos());
-        int[] low = new int[] { centerChunk.getIndx() - this.renderDist, centerChunk.getIndz() - this.renderDist };
-        for (int x = low[0]; x <= low[0] + 2 * this.renderDist; x++) {
-            for (int z = low[1]; z <= low[1] + 2 * this.renderDist; z++) {
+        PVector center = new PVector().set(this.game.getP1().getPos());
+        center.x /= Chunk.rawWidth();
+        center.z /= Chunk.rawWidth();
+        for (int x = (int) center.x - this.renderDist - 1; x <= center.x + this.renderDist; x++) {
+            for (int z = (int) center.z - this.renderDist - 1; z <= center.z + this.renderDist; z++) {
+                this.game.pushMatrix();
+                this.game.translate(x * Chunk.rawWidth(), this.data.get(x, z).getRawCoords().y, z * Chunk.rawWidth());
                 this.data.get(x, z).display();
+                this.game.popMatrix();
             }
         }
     }
