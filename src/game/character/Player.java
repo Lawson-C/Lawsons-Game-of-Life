@@ -26,7 +26,6 @@ public class Player {
 
     public void periodic() {
         this.cam.periodic();
-        this.hud();
     }
 
     public EpicCam cam() {
@@ -47,7 +46,7 @@ public class Player {
 
     public float getTint() {
         Block b = this.world.getBlockRaw(this.cam.camPos());
-        return b instanceof Air ? b.getState() * 50 : 0;
+        return b instanceof Air ? b.getState() * 10 : 0;
     }
 
     public void hud() {

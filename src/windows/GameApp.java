@@ -29,6 +29,7 @@ public class GameApp extends PApplet {
         background(0, 55, 127);
         player.periodic();
         world.display();
+        player.hud();
     }
 
     public boolean isFocused() {
