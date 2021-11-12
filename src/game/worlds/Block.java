@@ -1,10 +1,10 @@
 package game.worlds;
 
-import processing.core.PApplet;
 import processing.core.PVector;
+import windows.GameApp;
 
 public abstract class Block {
-    protected PApplet game;
+    protected GameApp game;
     protected World world;
     protected int size;
     protected Chunk hood;
@@ -15,7 +15,7 @@ public abstract class Block {
     public Block(Chunk hood, int indx, int indy, int indz, float state) {
         this.game = hood.getApplet();
         this.world = hood.getWorld();
-        this.size = Chunk.blockSize;
+        this.size = game.getSize();
         this.hood = hood;
         this.indx = indx;
         this.indy = indy;
@@ -53,6 +53,10 @@ public abstract class Block {
         if (s > 1)
             s = 1;
         this.state = s;
+    }
+
+    public float getState() {
+        return this.state;
     }
 
     public PVector getRawCoords() {

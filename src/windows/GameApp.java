@@ -6,13 +6,15 @@ import game.worlds.generators.Generator;
 import processing.core.PApplet;
 
 public class GameApp extends PApplet {
-    Player player;
-    World world;
-    int blockSize;
+    protected Player player;
+    protected World world;
+    protected Generator gen;
+    protected int blockSize;
 
     public GameApp(Generator g) {
         this.blockSize = g.getSize();
-        this.world = new World(this, g, this.blockSize);
+        this.gen = g;
+        this.world = new World(this);
         super.runSketch();
         // due to how processing works the rest of this constructor should be empty
         // (place init stuff in void settings())
@@ -26,7 +28,7 @@ public class GameApp extends PApplet {
     public void draw() {
         background(0, 55, 127);
         player.periodic();
-        world.display(true);
+        world.display();
     }
 
     public boolean isFocused() {
@@ -43,5 +45,17 @@ public class GameApp extends PApplet {
 
     public Player getP1() {
         return this.player;
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
+
+    public int getSize() {
+        return this.blockSize;
+    }
+
+    public Generator getGen() {
+        return this.gen;
     }
 }

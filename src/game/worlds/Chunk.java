@@ -1,21 +1,21 @@
 package game.worlds;
 
 import game.worlds.generators.Generator;
-import processing.core.PApplet;
 import processing.core.PVector;
+import windows.GameApp;
 
 public class Chunk {
     public static final int width = 8, height = 16;
     public static int blockSize;
 
-    private PApplet game;
+    private GameApp game;
     private World world;
     private int indx, indz;
     private Block[][][] data;
 
     public Chunk(World world, int indx, int indz, Generator g) {
-        Chunk.blockSize = world.getSize();
         this.game = world.game;
+        Chunk.blockSize = game.getSize();
         this.world = world;
         this.indx = indx;
         this.indz = indz;
@@ -51,7 +51,7 @@ public class Chunk {
         this.data[x][y][z] = b;
     }
 
-    public PApplet getApplet() {
+    public GameApp getApplet() {
         return this.game;
     }
 
@@ -87,5 +87,16 @@ public class Chunk {
                 }
             }
         }
+    }
+
+    /*
+     * returns block based on raw coords
+     */
+    public Block getBlockRaw(float x, float y, float z) {
+        PVector corner = this.getRawCoords();
+        int xi = (int) ((x - corner.x) / (Chunk.blockSize));
+        int yi = (int) ((y - corner.y) / (Chunk.blockSize)) + 1;
+        int zi = (int) ((z - corner.z) / (Chunk.blockSize));
+        return this.data[xi][yi][zi];
     }
 }
