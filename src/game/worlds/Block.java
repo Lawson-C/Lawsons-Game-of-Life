@@ -1,24 +1,26 @@
 package game.worlds;
 
-import processing.core.PApplet;
 import processing.core.PVector;
+import windows.GameApp;
 
 public abstract class Block {
-    protected PApplet game;
+    protected GameApp game;
     protected World world;
     protected int size;
     protected Chunk hood;
     protected int indx, indy, indz; // indecies within chunk
     protected PVector pos;
+    protected float state;
 
-    public Block(PApplet game, World world, int size, Chunk hood, int indx, int indy, int indz) {
-        this.game = game;
-        this.world = world;
-        this.size = size;
+    public Block(Chunk hood, int indx, int indy, int indz, float state) {
+        this.game = hood.getApplet();
+        this.world = hood.getWorld();
+        this.size = game.getSize();
         this.hood = hood;
         this.indx = indx;
         this.indy = indy;
         this.indz = indz;
+        this.state = state;
         this.pos = new PVector(this.indx * this.size, this.indy * this.size, this.indz * this.size);
     }
 
@@ -44,6 +46,18 @@ public abstract class Block {
      * Chunk 'hood' must call translate beforehand
      */
     public abstract void display();
+
+    public void updateState(float s) {
+        if (s < 0)
+            s = 0;
+        if (s > 1)
+            s = 1;
+        this.state = s;
+    }
+
+    public float getState() {
+        return this.state;
+    }
 
     public PVector getRawCoords() {
         return new PVector().set(this.hood.getRawCoords()).add(this.pos);

@@ -7,8 +7,8 @@ import processing.core.PApplet;
 public class Grid<T> {
 	final T empty = (T) new Object();
 
-	private ArrayList<ArrayList<T>> val;
-	private int nx, px, ny, py;
+	protected ArrayList<ArrayList<T>> val;
+	protected int nx, px, ny, py;
 
 	public Grid(int nx, int px, int ny, int py) {
 		this.nx = nx;
@@ -143,6 +143,7 @@ public class Grid<T> {
 	}
 }
 
+// germans are jealous of how long this word is
 class GridIndexOutOfBoundsException extends IndexOutOfBoundsException {
 	GridIndexOutOfBoundsException(String text) {
 		super(text);

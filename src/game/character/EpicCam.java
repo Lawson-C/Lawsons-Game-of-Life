@@ -137,7 +137,7 @@ class EpicCam {
 		this.game.stroke(255, 0, 0);
 		this.game.line(0, 0, (float) .15, 0);
 		this.game.stroke(0, 0, 255);
-		this.game.line(0, 0, 0, 0, 0, (float) -.15);
+		this.game.line(0, 0, 0, 0, 0, (float) .15);
 		this.game.popMatrix();
 	}
 
@@ -184,6 +184,10 @@ class EpicCam {
 		}
 	}
 
+	public PVector getPos() {
+		return this.position;
+	}
+
 	public void keyPressed(Character key) {
 		this.controls.keyPressed(key);
 	}
@@ -194,5 +198,9 @@ class EpicCam {
 
 	public float getHeight() {
 		return this.kHeight;
+	}
+
+	public PVector camPos() {
+		return new PVector().set(this.position).add(this.camTran);
 	}
 }

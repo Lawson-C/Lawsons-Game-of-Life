@@ -1,31 +1,31 @@
 package game.worlds;
 
 import game.worlds.generators.Generator;
-import processing.core.PApplet;
 import processing.core.PVector;
+import windows.GameApp;
 
 public class Chunk {
     public static final int width = 8, height = 16;
+    public static int blockSize;
 
-    private PApplet game;
+    private GameApp game;
     private World world;
     private int indx, indz;
-    private int blockSize;
     private Block[][][] data;
 
-    public Chunk(PApplet game, World world, int indx, int indz, Generator g) {
-        this.game = game;
+    public Chunk(World world, int indx, int indz, Generator g) {
+        this.game = world.game;
+        Chunk.blockSize = game.getSize();
         this.world = world;
         this.indx = indx;
         this.indz = indz;
-        this.blockSize = world.getSize();
         this.data = g.makeChunk(this, this.world, indx, indz);
     }
 
+    /*
+     * world must call translate() beforehand
+     */
     public void display() {
-        this.game.pushMatrix();
-        PVector coords = this.getRawCoords();
-        this.game.translate(coords.x, coords.y, coords.z);
         for (int x = 0; x < Chunk.width; x++) {
             for (int y = 0; y < Chunk.height; y++) {
                 for (int z = 0; z < Chunk.width; z++) {
@@ -33,7 +33,6 @@ public class Chunk {
                 }
             }
         }
-        this.game.popMatrix();
     }
 
     public void chunkStroke() {
@@ -42,9 +41,9 @@ public class Chunk {
         this.game.stroke(255, 0, 0);
         this.game.strokeWeight(5);
         PVector coords = this.getRawCoords();
-        this.game.translate(coords.x + this.rawWidth() / 2, coords.y + this.rawHeight() / 2,
-                coords.z + this.rawWidth() / 2);
-        this.game.box(this.rawWidth(), this.rawHeight(), this.rawWidth());
+        this.game.translate(coords.x + Chunk.rawWidth() / 2, coords.y + Chunk.rawHeight() / 2,
+                coords.z + Chunk.rawWidth() / 2);
+        this.game.box(Chunk.rawWidth(), Chunk.rawHeight(), Chunk.rawWidth());
         this.game.popMatrix();
     }
 
@@ -52,8 +51,12 @@ public class Chunk {
         this.data[x][y][z] = b;
     }
 
-    public PApplet getApplet() {
+    public GameApp getApplet() {
         return this.game;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     public int getIndx() {
@@ -64,16 +67,36 @@ public class Chunk {
         return indz;
     }
 
-    public int rawWidth() {
-        return Chunk.width * this.blockSize;
+    public static int rawWidth() {
+        return Chunk.width * Chunk.blockSize;
     }
 
-    public int rawHeight() {
-        return Chunk.height * this.blockSize;
+    public static int rawHeight() {
+        return Chunk.height * Chunk.blockSize;
     }
 
     public PVector getRawCoords() {
-        return new PVector(this.indx * this.rawWidth(), this.rawHeight(),
-                this.indz * this.rawWidth());
+        return new PVector(this.indx * Chunk.rawWidth(), Chunk.rawHeight(), this.indz * Chunk.rawWidth());
+    }
+
+    public void updateStates(float[][][] s) {
+        for (int x = 0; x < Chunk.width; x++) {
+            for (int y = 0; y < Chunk.height; y++) {
+                for (int z = 0; z < Chunk.width; z++) {
+                    this.data[x][y][z].updateState(s[x][y][z]);
+                }
+            }
+        }
+    }
+
+    /*
+     * returns block based on raw coords
+     */
+    public Block getBlockRaw(float x, float y, float z) {
+        PVector corner = this.getRawCoords();
+        int xi = (int) ((x - corner.x) / (Chunk.blockSize));
+        int yi = (int) ((y - corner.y) / (Chunk.blockSize)) + 1;
+        int zi = (int) ((z - corner.z) / (Chunk.blockSize));
+        return this.data[xi][yi][zi];
     }
 }

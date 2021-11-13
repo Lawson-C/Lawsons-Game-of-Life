@@ -2,16 +2,17 @@ package game.worlds.blockstates;
 
 import game.worlds.Block;
 import game.worlds.Chunk;
-import game.worlds.World;
-import processing.core.PApplet;
 
 public class Air extends Block {
-    public Air(PApplet game, World world, Chunk hood, int indx, int indy, int indz) {
-        super(game, world, world.getSize(), hood, indx, indy, indz);
+    public Air(Chunk hood, int indx, int indy, int indz, float state) {
+        super(hood, indx, indy, indz, state);
     }
 
     @Override
     public void display() {
-        // its air you can't even see it (usually?)
+        /*
+         * super.game.noStroke(); super.game.fill(255, super.state * 10);
+         * super.game.box(super.size);
+         */
     }
 }

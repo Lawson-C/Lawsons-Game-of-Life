@@ -4,14 +4,14 @@ import processing.core.PVector;
 import processing.core.PApplet;
 
 public class Cell {
-    static int SIZE = 10;
+    static final int SIZE = 20;
 
     private double state;
     private int[] index;
     private PVector pos;
     private PApplet window;
 
-    Cell(PApplet window, int indx, int indy, int indz, float state) {
+    public Cell(PApplet window, int indx, int indy, int indz, float state) {
         this.window = window;
         this.index = new int[] { indx, indy, indz };
         this.state = state;
@@ -19,6 +19,16 @@ public class Cell {
     }
 
     public void display() {
+        int x = this.index[0] * SIZE;
+        int y = this.index[1] * SIZE;
+        int z = this.index[2] * SIZE;
+
+        this.window.pushMatrix();
+        this.window.translate(x + SIZE / 2 + this.window.width / 2, y + SIZE / 2 + this.window.height / 2, z + SIZE / 2);
+        this.window.noStroke();
+        this.window.fill((float) this.state * 255, (float) this.state * 255);
+        this.window.box(SIZE);
+        this.window.popMatrix();
     }
 
     public PVector getPos() {
