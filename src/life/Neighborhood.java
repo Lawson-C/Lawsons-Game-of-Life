@@ -71,7 +71,7 @@ public class Neighborhood {
                 }
             }
         }
-        for (int x = 0; x < this.cells.length; x++) {
+        for (int x = 0; x < this.cells.length / 2; x++) {
             for (int y = this.cells[x].length / 2; y < this.cells[x].length; y++) {
                 for (int z = 0; z < this.cells[x][y].length; z++) {
                     cb.run(x, y, z);
