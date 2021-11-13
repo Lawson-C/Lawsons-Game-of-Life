@@ -33,8 +33,6 @@ public class World {
                 this.game.popMatrix();
             }
         }
-        Chunk c = this.getChunkRaw(this.game.getP1().getPos());
-        c.chunkStroke();
     }
 
     public PVector getSpawn() {
