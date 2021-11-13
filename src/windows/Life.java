@@ -5,11 +5,24 @@ import life.patterns.Random;
 import processing.core.PApplet;
 
 public class Life extends PApplet {
-    private Neighborhood neighborhood;
+    protected volatile Neighborhood neighborhood;
 
-    public Life() {
+    protected Thread noVisualsThread;
+    protected boolean display;
+
+    public Life(boolean display) {
         neighborhood = new Neighborhood(this, new Random(), 16, 16, 16);
-        super.runSketch();
+        this.display = display;
+        if (display) {
+            super.runSketch();
+        } else {
+            noVisualsThread = new Thread(new Runnable() {
+                public void run() {
+                    neighborhood.update();
+                }
+            });
+            noVisualsThread.start();
+        }
     }
 
     public void settings() {
@@ -24,6 +37,7 @@ public class Life extends PApplet {
         rotateX(-map(mouseY, 0, height, -TAU, TAU));
         translate(-width / 2, -height / 2);
 
+        neighborhood.update();
         neighborhood.display();
     }
 }

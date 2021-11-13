@@ -24,7 +24,8 @@ public class Cell {
         int z = this.index[2] * SIZE;
 
         this.window.pushMatrix();
-        this.window.translate(x + SIZE / 2 + this.window.width / 2, y + SIZE / 2 + this.window.height / 2, z + SIZE / 2);
+        this.window.translate(x + SIZE / 2 + this.window.width / 2, y + SIZE / 2 + this.window.height / 2,
+                z + SIZE / 2);
         this.window.noStroke();
         this.window.fill((float) this.state * 255, (float) this.state * 255);
         this.window.box(SIZE);
@@ -44,6 +45,14 @@ public class Cell {
     }
 
     public void setState(double state) {
+        if (state > 1)
+            state = 1;
+        if (state < 0)
+            state = 0;
         this.state = state;
+    }
+
+    public void addState(double inc) {
+        this.setState(this.state + inc);
     }
 }
