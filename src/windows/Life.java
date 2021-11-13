@@ -11,7 +11,7 @@ public class Life extends PApplet {
     protected boolean display;
 
     public Life(boolean display) {
-        neighborhood = new Neighborhood(this, new Random(), 16, 16, 16);
+        neighborhood = new Neighborhood(this, new Random(16, 16, 16));
         this.display = display;
         if (display) {
             super.runSketch();
@@ -39,5 +39,9 @@ public class Life extends PApplet {
 
         neighborhood.update();
         neighborhood.display();
+    }
+
+    public void mousePressed() {
+        this.neighborhood = new Neighborhood(this, new Random(16, 16, 16));
     }
 }

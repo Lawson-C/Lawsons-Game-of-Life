@@ -10,13 +10,14 @@ public class Neighborhood {
     protected Life window;
     protected Cell[][][] cells;
 
-    public Neighborhood(Life window, Pattern p, int lx, int ly, int lz) {
+    public Neighborhood(Life window, Pattern p) {
         this.window = window;
-        this.cells = new Cell[lx][ly][lz];
-        for (int x = 0; x < lx; x++) {
-            for (int y = 0; y < ly; y++) {
-                for (int z = 0; z < lz; z++) {
-                    float state = p.getState(x, y, z);
+        int[] d = p.dim();
+        this.cells = new Cell[d[0]][d[1]][d[2]];
+        for (int x = 0; x < d[0]; x++) {
+            for (int y = 0; y < d[1]; y++) {
+                for (int z = 0; z < d[2]; z++) {
+                    double state = p.getState(x, y, z);
                     this.cells[x][y][z] = new Cell(window, x, y, z, state);
                 }
             }
@@ -37,7 +38,7 @@ public class Neighborhood {
                         Cell c = this.cells[x][y][z];
                         Cell c1 = this.cells[tx][ty][tz];
                         double diff = c.getState() - c1.getState();
-                        double mag = 0.5;
+                        double mag = 0.0005;
                         c.addState(-diff * mag);
                         c1.addState(diff * mag);
                     }

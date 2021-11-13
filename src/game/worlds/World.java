@@ -97,4 +97,8 @@ public class World {
     public PVector getWorldCoords(float x, float z) {
         return this.getWorldCoords(x, 0, z);
     }
+
+    public int[] getSize() {
+        return this.data.size(false);
+    }
 }

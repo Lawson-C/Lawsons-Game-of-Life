@@ -11,7 +11,7 @@ public class Cell {
     private PVector pos;
     private PApplet window;
 
-    public Cell(PApplet window, int indx, int indy, int indz, float state) {
+    public Cell(PApplet window, int indx, int indy, int indz, double state) {
         this.window = window;
         this.index = new int[] { indx, indy, indz };
         this.state = state;
@@ -27,7 +27,7 @@ public class Cell {
         this.window.translate(x + SIZE / 2 + this.window.width / 2, y + SIZE / 2 + this.window.height / 2,
                 z + SIZE / 2);
         this.window.noStroke();
-        this.window.fill((float) this.state * 255, (float) this.state * 255);
+        this.window.fill((float) this.state * 255);
         this.window.box(SIZE);
         this.window.popMatrix();
     }
