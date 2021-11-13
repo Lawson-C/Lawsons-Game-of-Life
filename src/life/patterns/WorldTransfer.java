@@ -14,7 +14,7 @@ public class WorldTransfer extends Pattern {
     /*
      * sets state based on the state of blocks in a world (passed into constructor)
      */
-    public double getState(int x, int y, int z) {
+    public double mapState(int x, int y, int z) {
         return 0;
     }
 }

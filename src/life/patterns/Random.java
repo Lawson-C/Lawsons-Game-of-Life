@@ -5,7 +5,7 @@ public class Random extends Pattern {
         super(lx, ly, lz);
     }
 
-    public double getState(int x, int y, int z) {
+    public double mapState(int x, int y, int z) {
         double amount = Math.random();
         return amount;
     }
