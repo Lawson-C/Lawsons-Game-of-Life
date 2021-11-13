@@ -1,4 +1,4 @@
-package util;
+package util.grids;
 
 import java.util.ArrayList;
 

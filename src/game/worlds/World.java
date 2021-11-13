@@ -1,7 +1,7 @@
 package game.worlds;
 
 import processing.core.PVector;
-import util.LoopGrid;
+import util.grids.LoopGrid;
 import windows.GameApp;
 
 public class World {

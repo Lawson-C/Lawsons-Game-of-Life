@@ -1,4 +1,4 @@
-package util;
+package util.grids;
 
 public class LoopGrid<T> extends Grid<T> {
     public LoopGrid(int nx, int px, int ny, int py) {
