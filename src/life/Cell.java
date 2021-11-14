@@ -4,12 +4,12 @@ import processing.core.PVector;
 import processing.core.PApplet;
 
 public class Cell {
-    static final int SIZE = 20;
+    static final int SIZE = 5;
 
-    private double state;
-    private int[] index;
-    private PVector pos;
-    private PApplet window;
+    protected double state;
+    protected int[] index;
+    protected PVector pos;
+    protected PApplet window;
 
     public Cell(PApplet window, int indx, int indy, int indz, double state) {
         this.window = window;
@@ -41,7 +41,7 @@ public class Cell {
     }
 
     public double getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(double state) {

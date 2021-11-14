@@ -17,7 +17,7 @@ public class Neighborhood {
         for (int x = 0; x < d[0]; x++) {
             for (int y = 0; y < d[1]; y++) {
                 for (int z = 0; z < d[2]; z++) {
-                    double state = p.getState(x, y, z);
+                    double state = p.mapState(x, y, z);
                     this.cells[x][y][z] = new Cell(window, x, y, z, state);
                 }
             }
@@ -26,11 +26,11 @@ public class Neighborhood {
 
     public void update() {
         this.forEach((int x, int y, int z) -> {
-            for (double oz = -radius; oz < radius; oz++) {
+            for (int oz = (int) -radius; oz <= radius; oz++) {
                 double xMinMax = Math.sqrt(Math.pow(radius, 2) - Math.pow(oz, 2));
-                for (double ox = -xMinMax; ox < xMinMax; ox++) {
+                for (int ox = (int) -xMinMax; ox <= xMinMax; ox++) {
                     double yMinMax = Math.sqrt(Math.pow(radius, 2) - Math.pow(ox, 2));
-                    for (double oy = -yMinMax; oy < yMinMax; oy++) {
+                    for (int oy = (int) -yMinMax; oy <= yMinMax; oy++) {
                         int tx = (int) Math.abs((x + ox) % this.cells.length);
                         int ty = (int) Math.abs((y + oy) % this.cells[tx].length);
                         int tz = (int) Math.abs((z + oz) % this.cells[tx][ty].length);
@@ -38,7 +38,8 @@ public class Neighborhood {
                         Cell c = this.cells[x][y][z];
                         Cell c1 = this.cells[tx][ty][tz];
                         double diff = c.getState() - c1.getState();
-                        double mag = 0.0005;
+                        double mag = 0.005 / Math.pow(radius, 3);
+
                         c.addState(-diff * mag);
                         c1.addState(diff * mag);
                     }

@@ -2,6 +2,7 @@ package windows;
 
 import life.Neighborhood;
 import life.patterns.Random;
+import life.patterns.WorldTransfer;
 import processing.core.PApplet;
 
 public class Life extends PApplet {
@@ -11,7 +12,7 @@ public class Life extends PApplet {
     protected boolean display;
 
     public Life(boolean display) {
-        neighborhood = new Neighborhood(this, new Random(16, 16, 16));
+        neighborhood = new Neighborhood(this, new WorldTransfer(App.game.getWorld()));
         this.display = display;
         if (display) {
             super.runSketch();
@@ -42,6 +43,6 @@ public class Life extends PApplet {
     }
 
     public void mousePressed() {
-        this.neighborhood = new Neighborhood(this, new Random(16, 16, 16));
+        this.neighborhood = new Neighborhood(this, new WorldTransfer(App.game.getWorld()));
     }
 }

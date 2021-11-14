@@ -51,6 +51,10 @@ public class Chunk {
         this.data[x][y][z] = b;
     }
 
+    public Block getBlock(int x, int y, int z) {
+        return this.data[x][y][z];
+    }
+
     public GameApp getApplet() {
         return this.game;
     }
@@ -95,7 +99,7 @@ public class Chunk {
     public Block getBlockRaw(float x, float y, float z) {
         PVector corner = this.getRawCoords();
         int xi = (int) ((x - corner.x) / (Chunk.blockSize));
-        int yi = (int) ((y - corner.y) / (Chunk.blockSize)) + 1;
+        int yi = (int) ((y - corner.y) / (Chunk.blockSize));
         int zi = (int) ((z - corner.z) / (Chunk.blockSize));
         return this.data[xi][yi][zi];
     }

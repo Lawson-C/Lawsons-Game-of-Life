@@ -5,7 +5,8 @@ import util.grids.LoopGrid;
 import windows.GameApp;
 
 public class World {
-    protected int renderDist = 1;
+    final protected double renderDist = 1;
+
     protected GameApp game;
     protected PVector spawnPoint;
     protected LoopGrid<Chunk> data;
@@ -25,8 +26,9 @@ public class World {
         PVector center = new PVector().set(this.game.getP1().getPos());
         center.x /= Chunk.rawWidth();
         center.z /= Chunk.rawWidth();
-        for (int x = (int) center.x - this.renderDist - 1; x <= center.x + this.renderDist; x++) {
-            for (int z = (int) center.z - this.renderDist - 1; z <= center.z + this.renderDist; z++) {
+        for (int x = (int) (center.x - this.renderDist - 1); x <= center.x + this.renderDist; x++) {
+            double minMax = Math.sqrt(Math.pow(this.renderDist, 2) - Math.pow(x, 2));
+            for (int z = (int) (center.z - minMax); z <= center.z + minMax; z++) {
                 this.game.pushMatrix();
                 this.game.translate(x * Chunk.rawWidth(), this.data.get(x, z).getRawCoords().y, z * Chunk.rawWidth());
                 this.data.get(x, z).display();
@@ -61,6 +63,13 @@ public class World {
 
     public Chunk getChunkRaw(PVector p) {
         return this.getChunkRaw(p.x, p.z);
+    }
+
+    /*
+     * returns block based on world index
+     */
+    public Block getBlock(int x, int y, int z) {
+        return this.data.get(x / Chunk.width, z / Chunk.width).getBlock(x % Chunk.width, y, z % Chunk.width);
     }
 
     /*

@@ -5,9 +5,13 @@ public abstract class Pattern {
 
     public Pattern(int lx, int ly, int lz) {
         this.states = new double[lx][ly][lz];
-        for (int x = 0; x < lx; x++) {
-            for (int y = 0; y < ly; y++) {
-                for (int z = 0; z < lz; z++) {
+
+    }
+
+    public void makeStateMap() {
+        for (int x = 0; x < this.states.length; x++) {
+            for (int y = 0; y < this.states[x].length; y++) {
+                for (int z = 0; z < this.states[x][y].length; z++) {
                     this.states[x][y][z] = mapState(x, y, z);
                 }
             }
