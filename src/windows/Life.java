@@ -8,7 +8,7 @@ import processing.core.PApplet;
 public class Life extends PApplet {
     protected volatile Neighborhood neighborhood;
 
-    protected Thread noVisualsThread;
+    protected Thread updateThread;
     protected boolean display;
 
     public Life(boolean display) {
@@ -16,14 +16,13 @@ public class Life extends PApplet {
         this.display = display;
         if (display) {
             super.runSketch();
-        } else {
-            noVisualsThread = new Thread(new Runnable() {
-                public void run() {
-                    neighborhood.update();
-                }
-            });
-            noVisualsThread.start();
         }
+        updateThread = new Thread(new Runnable() {
+            public void run() {
+                neighborhood.update();
+            }
+        });
+        updateThread.start();
     }
 
     public void settings() {
@@ -38,7 +37,6 @@ public class Life extends PApplet {
         rotateX(-map(mouseY, 0, height, -TAU, TAU));
         translate(-width / 2, -height / 2);
 
-        neighborhood.update();
         neighborhood.display();
     }
 

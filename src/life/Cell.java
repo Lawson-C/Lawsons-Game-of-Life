@@ -4,7 +4,7 @@ import processing.core.PVector;
 import processing.core.PApplet;
 
 public class Cell {
-    static final int SIZE = 5;
+    static final int SIZE = 1;
 
     protected double state;
     protected int[] index;

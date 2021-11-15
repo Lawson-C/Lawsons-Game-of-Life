@@ -9,6 +9,7 @@ public class Neighborhood {
 
     protected Life window;
     protected Cell[][][] cells;
+    protected int cx, cy, cz;
 
     public Neighborhood(Life window, Pattern p) {
         this.window = window;
@@ -58,32 +59,48 @@ public class Neighborhood {
         });
     }
 
+    public void changeCenter(int cx, int cy, int cz) {
+        this.cx = cx;
+        this.cy = cy;
+        this.cz = cz;
+    }
+
+    public void loopIndex(ThreeCoords cb, int x, int y, int z) {
+        int l = this.cells.length;
+        x = Math.abs((x + (int) (x / l + l) * l) % l);
+        l = this.cells[0].length;
+        y = Math.abs((y + (int) (y / l + l) * l) % l);
+        l = this.cells[0][0].length;
+        z = Math.abs((z + (int) (z / l + l) * l) % l);
+        cb.run(x, y, z);
+    }
+
     public void forEach(ThreeCoords cb) {
         for (int x = 0; x < this.cells.length / 2; x++) {
             for (int y = 0; y < this.cells[x].length / 2; y++) {
                 for (int z = 0; z < this.cells[x][y].length; z++) {
-                    cb.run(x, y, z);
+                    this.loopIndex(cb, x + this.cx, y + this.cy, z + this.cz);
                 }
             }
         }
         for (int x = this.cells.length / 2; x < this.cells.length; x++) {
             for (int y = 0; y < this.cells[x].length / 2; y++) {
                 for (int z = 0; z < this.cells[x][y].length; z++) {
-                    cb.run(x, y, z);
+                    this.loopIndex(cb, x + this.cx, y + this.cy, z + this.cz);
                 }
             }
         }
         for (int x = 0; x < this.cells.length / 2; x++) {
             for (int y = this.cells[x].length / 2; y < this.cells[x].length; y++) {
                 for (int z = 0; z < this.cells[x][y].length; z++) {
-                    cb.run(x, y, z);
+                    this.loopIndex(cb, x + this.cx, y + this.cy, z + this.cz);
                 }
             }
         }
         for (int x = this.cells.length / 2; x < this.cells.length; x++) {
             for (int y = this.cells[x].length / 2; y < this.cells[x].length; y++) {
                 for (int z = 0; z < this.cells[x][y].length; z++) {
-                    cb.run(x, y, z);
+                    this.loopIndex(cb, x + this.cx, y + this.cy, z + this.cz);
                 }
             }
         }

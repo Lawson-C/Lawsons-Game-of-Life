@@ -8,6 +8,6 @@ public class App {
 
     public static void main(String[] args) {
         game = new GameApp(new Flat(100));
-        life = new Life(true);
+        life = new Life(false);
     }
 }
