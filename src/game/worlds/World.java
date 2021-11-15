@@ -5,11 +5,12 @@ import util.grids.LoopGrid;
 import windows.GameApp;
 
 public class World {
-    final protected double renderDist = 1;
+    final protected double renderDist = 2; // measured in units of chunks
+
+    protected volatile LoopGrid<Chunk> data;
 
     protected GameApp game;
     protected PVector spawnPoint;
-    protected LoopGrid<Chunk> data;
 
     public World(GameApp game) {
         this.game = game;
@@ -22,15 +23,32 @@ public class World {
         }
     }
 
-    public void display() {
-        PVector center = new PVector().set(this.game.getP1().getPos());
+    public void renderBlocks() {
+        PVector center = this.game.getP1().getPos();
+        center.div(Chunk.blockSize);
+        for (int x = (int) (center.x - this.renderDist * Chunk.width); x < center.x
+                + this.renderDist * Chunk.width; x++) {
+            for (int y = 0; y < Chunk.height; y++) {
+                double minMax = Math.sqrt(Math.pow(this.renderDist * Chunk.width, 2) - Math.pow(x - center.x, 2));
+                for (int z = (int) (center.z - minMax); z < center.z + minMax; z++) {
+                    this.game.pushMatrix();
+                    this.game.translate(x * Chunk.blockSize, y * Chunk.blockSize + Chunk.rawHeight(), z * Chunk.blockSize);
+                    this.getBlock(x, y, z).display();
+                    this.game.popMatrix();
+                }
+            }
+        }
+    }
+
+    public void renderChunks() {
+        PVector center = this.game.getP1().getPos();
         center.x /= Chunk.rawWidth();
         center.z /= Chunk.rawWidth();
         for (int x = (int) (center.x - this.renderDist - 1); x <= center.x + this.renderDist; x++) {
             double minMax = Math.sqrt(Math.pow(this.renderDist, 2) - Math.pow(x, 2));
             for (int z = (int) (center.z - minMax); z <= center.z + minMax; z++) {
                 this.game.pushMatrix();
-                this.game.translate(x * Chunk.rawWidth(), this.data.get(x, z).getRawCoords().y, z * Chunk.rawWidth());
+                this.game.translate(x * Chunk.rawWidth(), Chunk.rawHeight(), z * Chunk.rawWidth());
                 this.data.get(x, z).display();
                 this.game.popMatrix();
             }
@@ -66,9 +84,13 @@ public class World {
     }
 
     /*
-     * returns block based on world index
+     * returns block based on world index (looped)
      */
     public Block getBlock(int x, int y, int z) {
+        int l = this.getSize()[0] * Chunk.width;
+        x = Math.abs((x + (int) (x / l + l) * l) % l);
+        l = this.getSize()[1] * Chunk.width;
+        z = Math.abs((z + (int) (z / l + l) * l) % l);
         return this.data.get(x / Chunk.width, z / Chunk.width).getBlock(x % Chunk.width, y, z % Chunk.width);
     }
 

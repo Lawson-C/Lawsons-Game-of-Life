@@ -28,7 +28,7 @@ public class GameApp extends PApplet {
     public void draw() {
         background(0, 55, 127);
         player.periodic();
-        world.display();
+        world.renderBlocks();
         player.hud();
     }
 
