@@ -14,7 +14,7 @@ public class World {
 
     public World(GameApp game) {
         this.game = game;
-        this.data = new LoopGrid<Chunk>(10, 10, 10, 10);
+        this.data = new LoopGrid<Chunk>(2, 2, 2, 2);
         int[] dim = this.data.size(); // dimensions of data grid
         for (int x = -dim[0]; x < dim[1]; x++) {
             for (int y = -dim[2]; y < dim[3]; y++) {

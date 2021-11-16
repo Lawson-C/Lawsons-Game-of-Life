@@ -1,7 +1,9 @@
 package life.patterns;
 
+import game.worlds.Block;
 import game.worlds.Chunk;
 import game.worlds.World;
+import game.worlds.blockstates.StateRanges;
 
 public class WorldTransfer extends Pattern {
     protected World world;
@@ -9,7 +11,13 @@ public class WorldTransfer extends Pattern {
     public WorldTransfer(World world) {
         super(world.getSize()[0] * Chunk.width, Chunk.height, world.getSize()[1] * Chunk.width);
         this.world = world;
-        super.makeStateMap();
+        super.makeStateMap((x, y, z) -> {
+            super.states[x][y][z] = this.mapState(x, y, z) + StateRanges.get(blockType(world.getBlock(x, y, z)));
+        });
+    }
+
+    protected String blockType(Block b) {
+        return b.getClass().toString().substring(30).trim();
     }
 
     /*

@@ -1,7 +1,6 @@
 package windows;
 
 import life.Neighborhood;
-import life.patterns.Random;
 import life.patterns.WorldTransfer;
 import processing.core.PApplet;
 
@@ -16,13 +15,21 @@ public class Life extends PApplet {
         this.display = display;
         if (display) {
             super.runSketch();
+        } else {
+            updateThread = new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        neighborhood.update();
+                        try {
+                            Thread.sleep(50000);
+                        } catch (InterruptedException e) {
+                            println(e);
+                        }
+                    }
+                }
+            });
+            updateThread.start();
         }
-        updateThread = new Thread(new Runnable() {
-            public void run() {
-                neighborhood.update();
-            }
-        });
-        updateThread.start();
     }
 
     public void settings() {
