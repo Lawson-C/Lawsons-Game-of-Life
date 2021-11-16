@@ -15,21 +15,21 @@ public class Life extends PApplet {
         this.display = display;
         if (display) {
             super.runSketch();
-        } else {
-            updateThread = new Thread(new Runnable() {
-                public void run() {
-                    while (true) {
-                        neighborhood.update();
-                        try {
-                            Thread.sleep(50000);
-                        } catch (InterruptedException e) {
-                            println(e);
-                        }
+        }
+        updateThread = new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    neighborhood.update();
+                    App.transferLife();
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        println(e);
                     }
                 }
-            });
-            updateThread.start();
-        }
+            }
+        });
+        updateThread.start();
     }
 
     public void settings() {
@@ -44,11 +44,14 @@ public class Life extends PApplet {
         rotateX(-map(mouseY, 0, height, -TAU, TAU));
         translate(-width / 2, -height / 2);
 
-        neighborhood.update();
         neighborhood.display();
     }
 
     public void mousePressed() {
         this.neighborhood = new Neighborhood(this, new WorldTransfer(App.game.getWorld()));
+    }
+
+    public Neighborhood getNeighborhood() {
+        return this.neighborhood;
     }
 }

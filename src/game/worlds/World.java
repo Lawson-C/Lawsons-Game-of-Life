@@ -2,6 +2,7 @@ package game.worlds;
 
 import processing.core.PVector;
 import util.grids.LoopGrid;
+import util.lambdas.ThreeCoords;
 import windows.GameApp;
 
 public class World {
@@ -24,20 +25,12 @@ public class World {
     }
 
     public void renderBlocks() {
-        PVector center = this.game.getP1().getPos();
-        center.div(Chunk.blockSize);
-        for (int x = (int) (center.x - this.renderDist * Chunk.width); x < center.x
-                + this.renderDist * Chunk.width; x++) {
-            for (int y = 0; y < Chunk.height; y++) {
-                double minMax = Math.sqrt(Math.pow(this.renderDist * Chunk.width, 2) - Math.pow(x - center.x, 2));
-                for (int z = (int) (center.z - minMax); z < center.z + minMax; z++) {
-                    this.game.pushMatrix();
-                    this.game.translate(x * Chunk.blockSize, y * Chunk.blockSize + Chunk.rawHeight(), z * Chunk.blockSize);
-                    this.getBlock(x, y, z).display();
-                    this.game.popMatrix();
-                }
-            }
-        }
+        this.forRenderBlocks((x, y, z) -> {
+            this.game.pushMatrix();
+            this.game.translate(x * Chunk.blockSize, y * Chunk.blockSize + Chunk.rawHeight(), z * Chunk.blockSize);
+            this.getBlock(x, y, z).display();
+            this.game.popMatrix();
+        });
     }
 
     public void renderChunks() {
@@ -88,9 +81,9 @@ public class World {
      */
     public Block getBlock(int x, int y, int z) {
         int l = this.getSize()[0] * Chunk.width;
-        x = Math.abs((x + (int) (x / l + l) * l) % l);
+        x = LoopGrid.loopIndex(x, l);
         l = this.getSize()[1] * Chunk.width;
-        z = Math.abs((z + (int) (z / l + l) * l) % l);
+        z = LoopGrid.loopIndex(z, l);
         return this.data.get(x / Chunk.width, z / Chunk.width).getBlock(x % Chunk.width, y, z % Chunk.width);
     }
 
@@ -131,5 +124,22 @@ public class World {
 
     public int[] getSize() {
         return this.data.size(false);
+    }
+
+    /*
+     * Iterates through every block in render distance and runs callback function
+     */
+    public void forRenderBlocks(ThreeCoords cb) {
+        PVector center = this.game.getP1().getPos();
+        center.div(Chunk.blockSize);
+        for (int x = (int) (center.x - this.renderDist * Chunk.width); x < center.x
+                + this.renderDist * Chunk.width; x++) {
+            for (int y = 0; y < Chunk.height; y++) {
+                double minMax = Math.sqrt(Math.pow(this.renderDist * Chunk.width, 2) - Math.pow(x - center.x, 2));
+                for (int z = (int) (center.z - minMax); z < center.z + minMax; z++) {
+                    cb.run(x, y, z);
+                }
+            }
+        }
     }
 }

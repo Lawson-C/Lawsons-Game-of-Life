@@ -49,6 +49,10 @@ public class Cell {
         return this.state;
     }
 
+    public double relState() {
+        return this.state - this.low;
+    }
+
     public String getType() {
         return this.type;
     }
