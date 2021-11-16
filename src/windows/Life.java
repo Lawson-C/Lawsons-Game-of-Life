@@ -22,7 +22,7 @@ public class Life extends PApplet {
                     neighborhood.update();
                     App.transferLife();
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         println(e);
                     }
