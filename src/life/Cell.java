@@ -58,9 +58,9 @@ public class Cell {
     }
 
     public void setState(double state) {
-        if (state > low)
+        if (state < low)
             state = low;
-        if (state < low + 1)
+        if (state > low + 1)
             state = low + 1;
         this.state = state;
     }

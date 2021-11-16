@@ -44,6 +44,7 @@ public class Life extends PApplet {
         rotateX(-map(mouseY, 0, height, -TAU, TAU));
         translate(-width / 2, -height / 2);
 
+        neighborhood.update();
         neighborhood.display();
     }
 
