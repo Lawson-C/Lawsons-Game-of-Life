@@ -28,6 +28,18 @@ public class Player {
         this.cam.periodic();
     }
 
+    public void hud() {
+        this.game.pushMatrix();
+        this.game.camera();
+        this.game.hint(PApplet.DISABLE_DEPTH_TEST);
+
+        this.game.noStroke();
+        this.game.fill(255, this.getTint());
+        this.game.rect(-500, -500, 2 * this.game.width, 2 * this.game.height);
+        this.game.hint(PApplet.ENABLE_DEPTH_TEST);
+        this.game.popMatrix();
+    }
+
     public EpicCam cam() {
         return this.cam;
     }
@@ -47,17 +59,5 @@ public class Player {
     public float getTint() {
         Block b = this.world.getBlockRaw(this.cam.camPos());
         return b instanceof Air ? b.getState() * 10 : 0;
-    }
-
-    public void hud() {
-        this.game.pushMatrix();
-        this.game.camera();
-        this.game.hint(PApplet.DISABLE_DEPTH_TEST);
-
-        this.game.noStroke();
-        this.game.fill(255, this.getTint());
-        this.game.rect(-500, -500, 2*this.game.width, 2*this.game.height);
-        this.game.hint(PApplet.ENABLE_DEPTH_TEST);
-        this.game.popMatrix();
     }
 }

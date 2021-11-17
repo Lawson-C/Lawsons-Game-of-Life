@@ -7,8 +7,9 @@ public abstract class Pattern {
 
     public Pattern(int lx, int ly, int lz) {
         this.states = new double[lx][ly][lz];
-
     }
+
+    public abstract double mapState(int x, int y, int z);
 
     public void makeStateMap() {
         for (int x = 0; x < this.states.length; x++) {
@@ -37,6 +38,4 @@ public abstract class Pattern {
     public double getState(int x, int y, int z) {
         return this.states[x][y][z];
     }
-
-    public abstract double mapState(int x, int y, int z);
 }

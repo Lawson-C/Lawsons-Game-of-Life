@@ -49,18 +49,6 @@ public class Cell {
         return this.state;
     }
 
-    public double relState() {
-        return this.state - this.low;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public boolean sameType(Cell c) {
-        return this.type.equals(c.getType());
-    }
-
     public void setState(double state) {
         if (state < low)
             state = low;
@@ -71,5 +59,17 @@ public class Cell {
 
     public void addState(double inc) {
         this.setState(this.state + inc);
+    }
+
+    public double relState() {
+        return this.state - this.low;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public boolean sameType(Cell c) {
+        return this.type.equals(c.getType());
     }
 }

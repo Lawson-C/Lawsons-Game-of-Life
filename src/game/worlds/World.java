@@ -48,6 +48,10 @@ public class World {
         }
     }
 
+    public int[] getSize() {
+        return this.data.size(false);
+    }
+
     public PVector getSpawn() {
         return this.spawnPoint;
     }
@@ -120,10 +124,6 @@ public class World {
     // ignore y
     public PVector getWorldCoords(float x, float z) {
         return this.getWorldCoords(x, 0, z);
-    }
-
-    public int[] getSize() {
-        return this.data.size(false);
     }
 
     /*

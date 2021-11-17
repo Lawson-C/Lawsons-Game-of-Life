@@ -111,12 +111,6 @@ public class Grid<T> {
 		}
 	}
 
-	public void indexExcept(int x, int y) {
-		if (x >= this.px || x < -this.nx || y >= this.py || y < -this.ny) {
-			throw new GridIndexOutOfBoundsException(" g: (" + x + ", " + y + ")");
-		}
-	}
-
 	public int[] size(boolean includeNegative) {
 		if (!includeNegative) {
 			return new int[] { this.nx + this.px, this.ny + this.py };
@@ -130,6 +124,12 @@ public class Grid<T> {
 	 */
 	public int[] size() {
 		return this.size(true);
+	}
+
+	public void indexExcept(int x, int y) {
+		if (x >= this.px || x < -this.nx || y >= this.py || y < -this.ny) {
+			throw new GridIndexOutOfBoundsException(" g: (" + x + ", " + y + ")");
+		}
 	}
 
 	public String toString() {

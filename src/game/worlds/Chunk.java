@@ -47,6 +47,16 @@ public class Chunk {
         this.game.popMatrix();
     }
 
+    public void updateStates(float[][][] s) {
+        for (int x = 0; x < Chunk.width; x++) {
+            for (int y = 0; y < Chunk.height; y++) {
+                for (int z = 0; z < Chunk.width; z++) {
+                    this.data[x][y][z].updateState(s[x][y][z]);
+                }
+            }
+        }
+    }
+
     public void setBlock(int x, int y, int z, Block b) {
         this.data[x][y][z] = b;
     }
@@ -71,26 +81,8 @@ public class Chunk {
         return indz;
     }
 
-    public static int rawWidth() {
-        return Chunk.width * Chunk.blockSize;
-    }
-
-    public static int rawHeight() {
-        return Chunk.height * Chunk.blockSize;
-    }
-
     public PVector getRawCoords() {
         return new PVector(this.indx * Chunk.rawWidth(), Chunk.rawHeight(), this.indz * Chunk.rawWidth());
-    }
-
-    public void updateStates(float[][][] s) {
-        for (int x = 0; x < Chunk.width; x++) {
-            for (int y = 0; y < Chunk.height; y++) {
-                for (int z = 0; z < Chunk.width; z++) {
-                    this.data[x][y][z].updateState(s[x][y][z]);
-                }
-            }
-        }
     }
 
     /*
@@ -102,5 +94,13 @@ public class Chunk {
         int yi = (int) ((y - corner.y) / (Chunk.blockSize));
         int zi = (int) ((z - corner.z) / (Chunk.blockSize));
         return this.data[xi][yi][zi];
+    }
+
+    public static int rawWidth() {
+        return Chunk.width * Chunk.blockSize;
+    }
+
+    public static int rawHeight() {
+        return Chunk.height * Chunk.blockSize;
     }
 }

@@ -24,6 +24,11 @@ public abstract class Block {
         this.pos = new PVector(this.indx * this.size, this.indy * this.size, this.indz * this.size);
     }
 
+    /*
+     * Chunk 'hood' must call translate beforehand
+     */
+    public abstract void display();
+
     public void transPos() {
         this.game.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2, this.pos.z + this.size / 2);
     }
@@ -41,11 +46,6 @@ public abstract class Block {
         display();
         this.game.popMatrix();
     }
-
-    /*
-     * Chunk 'hood' must call translate beforehand
-     */
-    public abstract void display();
 
     public void updateState(float s) {
         if (s < 0)

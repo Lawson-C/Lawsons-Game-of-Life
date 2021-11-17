@@ -83,6 +83,49 @@ class EpicCam {
 		crossHair();
 	}
 
+	public void run() {
+		if (this.controls.getRunning("forward")) {
+			this.move.x = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+			this.move.z = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+		} else if (this.controls.getRunning("back")) {
+			this.move.x = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+			this.move.z = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+		} else if (this.controls.getRunning("left")) {
+			this.move.x = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+			this.move.z = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+		} else if (this.controls.getRunning("right")) {
+			this.move.x = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+			this.move.z = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+		}
+		if (this.controls.getRunning("jump") && !this.controls.getJumping()) {
+			this.controls.setJumping(true);
+			this.move.y = -this.controls.getJumpPower();
+		}
+		if (this.controls.getRunning("lean left")) {
+			this.look.z = this.controls.getTiltPower();
+		} else if (this.controls.getRunning("lean right")) {
+			this.look.z = -this.controls.getTiltPower();
+		}
+		if (!this.controls.getRunning("forward") && !this.controls.getRunning("back")
+				&& !this.controls.getRunning("left") && !this.controls.getRunning("right")) {
+			this.move.x = 0;
+			this.move.z = 0;
+		}
+		if (!this.controls.getRunning("lean left") && !this.controls.getRunning("lean right")) {
+			this.look.z = 0;
+		}
+		if (this.controls.getRunning("sprint")) {
+			controls.setPower(50);
+		} else {
+			controls.setPower(25);
+		}
+		if (this.controls.getRunning("3rd person")) {
+			this.camTran.set(0, 0, this.kHeight);
+		} else {
+			this.camTran.set(0, 0, 0);
+		}
+	}
+
 	public void mouseMove() {
 		if (this.controls.getRunning("mouse lock")) {
 			if (!this.controls.getHorizLock() && this.game.mouseX > 0) {
@@ -139,53 +182,19 @@ class EpicCam {
 		this.game.stroke(0, 0, 255);
 		this.game.line(0, 0, 0, 0, 0, (float) .15);
 		this.game.popMatrix();
-	}
-
-	public void run() {
-		if (this.controls.getRunning("forward")) {
-			this.move.x = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-			this.move.z = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-		} else if (this.controls.getRunning("back")) {
-			this.move.x = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-			this.move.z = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-		} else if (this.controls.getRunning("left")) {
-			this.move.x = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-			this.move.z = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-		} else if (this.controls.getRunning("right")) {
-			this.move.x = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-			this.move.z = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-		}
-		if (this.controls.getRunning("jump") && !this.controls.getJumping()) {
-			this.controls.setJumping(true);
-			this.move.y = -this.controls.getJumpPower();
-		}
-		if (this.controls.getRunning("lean left")) {
-			this.look.z = this.controls.getTiltPower();
-		} else if (this.controls.getRunning("lean right")) {
-			this.look.z = -this.controls.getTiltPower();
-		}
-		if (!this.controls.getRunning("forward") && !this.controls.getRunning("back")
-				&& !this.controls.getRunning("left") && !this.controls.getRunning("right")) {
-			this.move.x = 0;
-			this.move.z = 0;
-		}
-		if (!this.controls.getRunning("lean left") && !this.controls.getRunning("lean right")) {
-			this.look.z = 0;
-		}
-		if (this.controls.getRunning("sprint")) {
-			controls.setPower(50);
-		} else {
-			controls.setPower(25);
-		}
-		if (this.controls.getRunning("3rd person")) {
-			this.camTran.set(0, 0, this.kHeight);
-		} else {
-			this.camTran.set(0, 0, 0);
-		}
+		this.game.noCursor();
 	}
 
 	public PVector getPos() {
 		return this.position;
+	}
+
+	public PVector camPos() {
+		return new PVector().set(this.position).add(this.camTran);
+	}
+
+	public float getHeight() {
+		return this.kHeight;
 	}
 
 	public void keyPressed(Character key) {
@@ -194,13 +203,5 @@ class EpicCam {
 
 	public void keyReleased(Character key) {
 		this.controls.keyReleased(key);
-	}
-
-	public float getHeight() {
-		return this.kHeight;
-	}
-
-	public PVector camPos() {
-		return new PVector().set(this.position).add(this.camTran);
 	}
 }
