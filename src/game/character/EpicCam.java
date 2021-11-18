@@ -14,6 +14,7 @@ class EpicCam {
 
 	private float kHeight = 150;
 	private float floor;
+	private float fov;
 
 	private PVector move = new PVector();
 	private PVector position = new PVector();
@@ -21,17 +22,7 @@ class EpicCam {
 	private PVector camTran = new PVector();
 
 	public EpicCam(GameApp game) {
-		this.game = game;
-
-		try {
-			this.bot = new Robot();
-		} catch (AWTException e) {
-			System.out.println("error with java.awt.robot class");
-		}
-		this.position = new PVector();
-		this.floor = this.game.height;
-
-		this.controls = new Controls(this.game);
+		this(game, new PVector(0, game.height));
 	}
 
 	public EpicCam(GameApp game, PVector floor) {
@@ -44,6 +35,7 @@ class EpicCam {
 		}
 		this.position = new PVector(floor.x, floor.y - this.kHeight, floor.z);
 		this.floor = floor.y;
+		this.fov = PApplet.radians(90);
 
 		this.controls = new Controls(this.game);
 	}
@@ -73,29 +65,29 @@ class EpicCam {
 		this.position.add(this.move);
 		this.game.camera(this.position.x + this.camTran.x, this.position.y + this.camTran.y,
 				this.position.z + this.camTran.z, this.position.x, this.position.y, this.position.z - 10, 0, 1, 0);
-		this.frust(PApplet.radians(70));
+		this.frust();
 
 		this.game.translate(this.position.x, this.position.y, this.position.z);
-		this.game.rotateX(PApplet.radians(this.look.y));
-		this.game.rotateZ(PApplet.radians(this.look.z));
-		this.game.rotateY(PApplet.radians(this.look.x));
+		this.game.rotateX(this.look.y);
+		this.game.rotateZ(this.look.z);
+		this.game.rotateY(this.look.x);
 		this.game.translate(-this.position.x, -this.position.y, -this.position.z);
 		crossHair();
 	}
 
 	public void run() {
 		if (this.controls.getRunning("forward")) {
-			this.move.x = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-			this.move.z = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+			this.move.x = this.controls.getPower() * PApplet.sin(this.look.x);
+			this.move.z = -this.controls.getPower() * PApplet.cos(this.look.x);
 		} else if (this.controls.getRunning("back")) {
-			this.move.x = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
-			this.move.z = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
+			this.move.x = -this.controls.getPower() * PApplet.sin(this.look.x);
+			this.move.z = this.controls.getPower() * PApplet.cos(this.look.x);
 		} else if (this.controls.getRunning("left")) {
-			this.move.x = -this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-			this.move.z = -this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+			this.move.x = -this.controls.getPower() * PApplet.cos(this.look.x);
+			this.move.z = -this.controls.getPower() * PApplet.sin(this.look.x);
 		} else if (this.controls.getRunning("right")) {
-			this.move.x = this.controls.getPower() * PApplet.cos(PApplet.radians(this.look.x));
-			this.move.z = this.controls.getPower() * PApplet.sin(PApplet.radians(this.look.x));
+			this.move.x = this.controls.getPower() * PApplet.cos(this.look.x);
+			this.move.z = this.controls.getPower() * PApplet.sin(this.look.x);
 		}
 		if (this.controls.getRunning("jump") && !this.controls.getJumping()) {
 			this.controls.setJumping(true);
@@ -129,51 +121,52 @@ class EpicCam {
 	public void mouseMove() {
 		if (this.controls.getRunning("mouse lock")) {
 			if (!this.controls.getHorizLock() && this.game.mouseX > 0) {
-				this.look.x += (this.game.mouseX - this.game.width / 2.) * (this.controls.getHorizSense() / 100.);
+				this.look.x += Math
+						.toRadians((this.game.mouseX - this.game.width / 2.) * (this.controls.getHorizSense() / 100.));
 			}
 			if (!this.controls.getVertLock() && this.game.mouseY > 0) {
-				this.look.y -= (this.game.mouseY - this.game.height / 2.) * (this.controls.getVertSense() / 100.);
+				this.look.y -= Math
+						.toRadians((this.game.mouseY - this.game.height / 2.) * (this.controls.getVertSense() / 100.));
 			}
-			if (this.look.y < -90) {
-				this.look.y = -90;
+			if (this.look.y < -Math.PI / 2.) {
+				this.look.y = (float) (-Math.PI / 2.);
 			}
-			if (this.look.y > 90) {
-				this.look.y = 90;
+			if (this.look.y > Math.PI / 2.) {
+				this.look.y = (float) (Math.PI / 2.);
 			}
 			if (this.game.isFocused()) {
 				this.bot.mouseMove(2 * 1920 / 5, 2 * 1080 / 5);
 			}
 		} else {
 			if (!this.controls.getHorizLock() && this.game.mouseX > 0) {
-				this.look.x += (this.game.mouseX - this.game.pmouseX) * (this.controls.getHorizSense() / 100.);
+				this.look.x += Math
+						.toRadians((this.game.mouseX - this.game.pmouseX) * (this.controls.getHorizSense() / 100.));
 			}
 			if (!this.controls.getVertLock() && this.game.mouseY > 0) {
-				this.look.y -= (this.game.mouseY - this.game.pmouseY) * (this.controls.getVertSense() / 100.);
+				this.look.y -= Math
+						.toRadians((this.game.mouseY - this.game.pmouseY) * (this.controls.getVertSense() / 100.));
 			}
-			if (this.look.y < -90) {
-				this.look.y = -90;
+			if (this.look.y < -Math.PI / 2.) {
+				this.look.y = (float) (-Math.PI / 2.);
 			}
-			if (this.look.y > 90) {
-				this.look.y = 90;
+			if (this.look.y > Math.PI / 2.) {
+				this.look.y = (float) (Math.PI / 2.);
 			}
 		}
 	}
 
-	void frust(float fov) {
+	void frust() {
 		float x, y, z = (float) .01;
-		x = z / PApplet.tan(fov / 2);
+		x = z / PApplet.tan(this.fov / 2);
 		y = (9 * x) / 16;
 		this.game.frustum(-x, x, -y, y, z, 10000);
 	}
 
 	void crossHair() {
 		this.game.pushMatrix();
-		this.game.translate(
-				this.position.x + this.camTran.x
-						+ 2 * PApplet.cos(PApplet.radians(this.look.y)) * PApplet.sin(PApplet.radians(this.look.x)),
-				this.position.y + this.camTran.y - 2 * PApplet.sin(PApplet.radians(this.look.y)),
-				this.position.z + this.camTran.z
-						- 2 * PApplet.cos(PApplet.radians(this.look.y)) * PApplet.cos(PApplet.radians(this.look.x)));
+		this.game.translate(this.position.x + this.camTran.x + 2 * PApplet.cos(this.look.y) * PApplet.sin(this.look.x),
+				this.position.y + this.camTran.y - 2 * PApplet.sin(this.look.y),
+				this.position.z + this.camTran.z - 2 * PApplet.cos(this.look.y) * PApplet.cos(this.look.x));
 		this.game.strokeWeight(5);
 		this.game.stroke(0, 255, 0);
 		this.game.line(0, 0, 0, (float) -.15);
@@ -183,6 +176,10 @@ class EpicCam {
 		this.game.line(0, 0, 0, 0, 0, (float) .15);
 		this.game.popMatrix();
 		this.game.noCursor();
+	}
+
+	public PVector lookVector() {
+		return new PVector().set(this.look);
 	}
 
 	public PVector getPos() {
@@ -195,6 +192,10 @@ class EpicCam {
 
 	public float getHeight() {
 		return this.kHeight;
+	}
+
+	public float getFOV() {
+		return this.fov;
 	}
 
 	public void keyPressed(Character key) {
