@@ -128,7 +128,7 @@ public class World {
     }
 
     /*
-     * Iterates through every block in render distance and runs callback function
+     * Iterates through every block in fov and render distance then runs callback function
      */
     public void forRenderBlocks(ThreeCoords cb) {
         Player p1 = this.game.getP1();
