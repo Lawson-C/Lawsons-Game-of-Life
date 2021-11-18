@@ -44,6 +44,14 @@ public class Player {
         return this.cam;
     }
 
+    public PVector lookVector() {
+        return this.cam.lookVector();
+    }
+
+    public float getFOV() {
+        return this.cam.getFOV();
+    }
+
     public PVector getPos() {
         return new PVector().set(this.cam.getPos());
     }
