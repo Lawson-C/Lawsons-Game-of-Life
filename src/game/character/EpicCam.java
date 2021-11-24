@@ -35,7 +35,7 @@ public class EpicCam {
 		}
 		this.position = new PVector(floor.x, floor.y - this.kHeight, floor.z);
 		this.floor = floor.y;
-		this.fov = PApplet.radians(90);
+		this.fov = PApplet.radians(45); // fov is kind of backwards
 
 		this.controls = new Controls(this.game);
 	}

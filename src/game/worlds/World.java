@@ -134,7 +134,7 @@ public class World {
     public void forRenderBlocks(ThreeCoords cb) {
         Player p1 = this.game.getP1();
         double rad = this.renderDist * Chunk.width;
-        double halfFov = p1.getFOV() / 2 + Math.PI / 8;
+        double halfFov = (Math.PI - p1.getFOV()) / 2 + Math.PI / 8;
         double pangle = p1.lookVector().x - Math.PI / 2;
         PVector playerPos = p1.getPos().div(Chunk.blockSize);
         playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
