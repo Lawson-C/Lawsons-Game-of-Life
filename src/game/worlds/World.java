@@ -128,41 +128,38 @@ public class World {
     }
 
     /*
-     * Iterates through every block in fov and render distance then runs callback function
+     * Iterates through every block in fov and render distance then runs callback
+     * function
      */
     public void forRenderBlocks(ThreeCoords cb) {
         Player p1 = this.game.getP1();
-        PVector playerPos = p1.getPos().div(Chunk.blockSize);
         double rad = this.renderDist * Chunk.width;
-        double fov = p1.getFOV() + Math.PI / 3;
-        double pangle = p1.lookVector().x;
-        playerPos.sub(4 * (float) Math.cos(pangle - Math.PI / 2.), 0, 4 * (float) Math.sin(pangle - Math.PI / 2.));
-        for (int x = 0; x <= rad; x++) {
-            double max = Math.sqrt(Math.pow(rad, 2) - Math.pow(x, 2));
-            for (int z = 0; z <= max; z++) {
-                if (z > x * Math.tan(fov / 2.))
-                    break;
+        double halfFov = p1.getFOV() / 2 + Math.PI / 8;
+        double pangle = p1.lookVector().x - Math.PI / 2;
+        PVector playerPos = p1.getPos().div(Chunk.blockSize);
+        playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
+        for (double x = -rad; x < rad; x++) {
+            double zBound = Math.sqrt(Math.pow(rad, 2) - Math.pow(x, 2));
+            for (double z = -zBound; z < zBound; z++) {
+                double low = pangle - halfFov;
+                double high = pangle + halfFov;
+                double angle = Math.atan2(z, x);
 
-                double hyp = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
-                double theta = Math.asin(z / hyp) - Math.PI / 2.;
-                PVector rotCoords = new PVector((float) (hyp * Math.cos(theta + pangle)), 0,
-                        (float) (hyp * Math.sin(theta + pangle)));
-
-                for (int y = 0; y < Chunk.height; y++) {
-                    cb.run((int) (rotCoords.x + playerPos.x), y, (int) (rotCoords.z + playerPos.z));
+                if (angle < 0 && pangle > Math.PI - halfFov) {
+                    angle += 2 * Math.PI;
                 }
-            }
-            for (int z = 0; z >= -max; z--) {
-                if (z < -x * Math.tan(fov / 2.))
-                    break;
-
-                double hyp = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2));
-                double theta = Math.asin(z / hyp) - Math.PI / 2.;
-                PVector rotCoords = new PVector((float) (hyp * Math.cos(theta + pangle)), 0,
-                        (float) (hyp * Math.sin(theta + pangle)));
+                if (angle > 0 && pangle < -Math.PI + halfFov) {
+                    angle -= 2 * Math.PI;
+                }
+                if (angle < low) {
+                    continue;
+                }
+                if (angle > high) {
+                    continue;
+                }
 
                 for (int y = 0; y < Chunk.height; y++) {
-                    cb.run((int) (rotCoords.x + playerPos.x), y, (int) (rotCoords.z + playerPos.z));
+                    cb.run((int) (x + playerPos.x), y, (int) (z + playerPos.z));
                 }
             }
         }

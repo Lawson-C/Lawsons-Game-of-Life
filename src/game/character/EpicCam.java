@@ -7,7 +7,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import windows.GameApp;
 
-class EpicCam {
+public class EpicCam {
 	private Robot bot;
 	private GameApp game;
 	private Controls controls;
@@ -119,6 +119,10 @@ class EpicCam {
 	}
 
 	public void mouseMove() {
+		while (look.x < 0) {
+			look.x += Math.PI * 2;
+		}
+		look.x %= Math.PI * 2;
 		if (this.controls.getRunning("mouse lock")) {
 			if (!this.controls.getHorizLock() && this.game.mouseX > 0) {
 				this.look.x += Math

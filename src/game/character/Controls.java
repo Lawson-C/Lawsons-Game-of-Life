@@ -3,7 +3,6 @@ package game.character;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import processing.core.PConstants;
 import windows.GameApp;
 
 public class Controls {
@@ -46,7 +45,7 @@ public class Controls {
 		this.controls.put('q', this.moves.get(4));
 		this.controls.put('e', this.moves.get(5));
 		this.controls.put(' ', this.moves.get(6));
-		this.controls.put(PConstants.TAB, this.moves.get(7));
+		this.controls.put('	', this.moves.get(7));
 		this.controls.put('z', this.moves.get(8));
 		this.controls.put('l', this.moves.get(9));
 
