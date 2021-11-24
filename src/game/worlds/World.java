@@ -1,12 +1,13 @@
 package game.worlds;
 
+import game.character.Player;
 import processing.core.PVector;
 import util.grids.LoopGrid;
 import util.lambdas.ThreeCoords;
 import windows.GameApp;
 
 public class World {
-    final protected double renderDist = 2; // measured in units of chunks
+    final protected double renderDist = 4; // measured in units of chunks
 
     protected volatile LoopGrid<Chunk> data;
 
@@ -15,7 +16,7 @@ public class World {
 
     public World(GameApp game) {
         this.game = game;
-        this.data = new LoopGrid<Chunk>(2, 2, 2, 2);
+        this.data = new LoopGrid<Chunk>(10, 10, 10, 10);
         int[] dim = this.data.size(); // dimensions of data grid
         for (int x = -dim[0]; x < dim[1]; x++) {
             for (int y = -dim[2]; y < dim[3]; y++) {
@@ -127,17 +128,38 @@ public class World {
     }
 
     /*
-     * Iterates through every block in render distance and runs callback function
+     * Iterates through every block in fov and render distance then runs callback
+     * function
      */
     public void forRenderBlocks(ThreeCoords cb) {
-        PVector center = this.game.getP1().getPos();
-        center.div(Chunk.blockSize);
-        for (int x = (int) (center.x - this.renderDist * Chunk.width); x < center.x
-                + this.renderDist * Chunk.width; x++) {
-            for (int y = 0; y < Chunk.height; y++) {
-                double minMax = Math.sqrt(Math.pow(this.renderDist * Chunk.width, 2) - Math.pow(x - center.x, 2));
-                for (int z = (int) (center.z - minMax); z < center.z + minMax; z++) {
-                    cb.run(x, y, z);
+        Player p1 = this.game.getP1();
+        double rad = this.renderDist * Chunk.width;
+        double halfFov = p1.getFOV() / 2. + Math.PI / 8;
+        double pangle = p1.lookVector().x - Math.PI / 2;
+        PVector playerPos = p1.getPos().div(Chunk.blockSize);
+        playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
+        for (double x = -rad; x < rad; x++) {
+            double zBound = Math.sqrt(Math.pow(rad, 2) - Math.pow(x, 2));
+            for (double z = -zBound; z < zBound; z++) {
+                double low = pangle - halfFov;
+                double high = pangle + halfFov;
+                double angle = Math.atan2(z, x);
+
+                if (angle < 0 && pangle > Math.PI - halfFov) {
+                    angle += 2 * Math.PI;
+                }
+                if (angle > 0 && pangle < -Math.PI + halfFov) {
+                    angle -= 2 * Math.PI;
+                }
+                if (angle < low) {
+                    continue;
+                }
+                if (angle > high) {
+                    continue;
+                }
+
+                for (int y = 0; y < Chunk.height; y++) {
+                    cb.run((int) (x + playerPos.x), y, (int) (z + playerPos.z));
                 }
             }
         }
