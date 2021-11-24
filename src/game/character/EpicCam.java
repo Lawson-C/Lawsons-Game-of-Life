@@ -35,7 +35,7 @@ public class EpicCam {
 		}
 		this.position = new PVector(floor.x, floor.y - this.kHeight, floor.z);
 		this.floor = floor.y;
-		this.fov = PApplet.radians(45); // fov is kind of backwards
+		this.fov = PApplet.radians(110);
 
 		this.controls = new Controls(this.game);
 	}
@@ -161,7 +161,7 @@ public class EpicCam {
 
 	void frust() {
 		float x, y, z = (float) .01;
-		x = z / PApplet.tan(this.fov / 2);
+		x = z * PApplet.tan(this.fov / 2);
 		y = (9 * x) / 16;
 		this.game.frustum(-x, x, -y, y, z, 10000);
 	}
