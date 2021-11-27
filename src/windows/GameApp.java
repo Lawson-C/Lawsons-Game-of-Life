@@ -1,9 +1,12 @@
 package windows;
 
+import java.util.ArrayList;
+
 import game.character.Player;
 import game.worlds.World;
 import game.worlds.generators.Generator;
 import processing.core.PApplet;
+import util.lambdas.KeyEvent;
 
 public class GameApp extends PApplet {
     protected Player player;
@@ -11,13 +14,17 @@ public class GameApp extends PApplet {
     protected Generator gen;
     protected int blockSize;
 
+    protected ArrayList<KeyEvent> handlePress;
+    protected ArrayList<KeyEvent> handleRelease;
+
     public GameApp(Generator g) {
         this.blockSize = g.getSize();
         this.gen = g;
         this.world = new World(this);
+        this.handlePress = new ArrayList<KeyEvent>();
+        this.handleRelease = new ArrayList<KeyEvent>();
         super.runSketch();
         // due to how processing works the rest of this constructor should be empty
-        // (place init stuff in void settings())
     }
 
     public void settings() {
@@ -37,11 +44,23 @@ public class GameApp extends PApplet {
     }
 
     public void keyPressed() {
-        this.player.keyPressed(key);
+        for (KeyEvent cb : this.handlePress) {
+            cb.run(key);
+        }
     }
 
     public void keyReleased() {
-        this.player.keyReleased(key);
+        for (KeyEvent cb : this.handleRelease) {
+            cb.run(key);
+        }
+    }
+
+    public void addPressHandle(KeyEvent cb) {
+        this.handlePress.add(cb);
+    }
+
+    public void addReleaseHandle(KeyEvent cb) {
+        this.handleRelease.add(cb);
     }
 
     public Player getP1() {

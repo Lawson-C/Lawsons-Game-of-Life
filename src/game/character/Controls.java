@@ -70,6 +70,13 @@ public class Controls {
 		this.toggle.put(this.moves.get(7), false);
 		this.toggle.put(this.moves.get(8), true);
 		this.toggle.put(this.moves.get(9), true);
+
+		this.game.addPressHandle((Character key) -> {
+			this.keyPressed(key);
+		});
+		this.game.addReleaseHandle((Character key) -> {
+			this.keyReleased(key);
+		});
 	}
 
 	public void keyPressed(Character key) {

@@ -201,12 +201,4 @@ public class EpicCam {
 	public float getFOV() {
 		return this.fov;
 	}
-
-	public void keyPressed(Character key) {
-		this.controls.keyPressed(key);
-	}
-
-	public void keyReleased(Character key) {
-		this.controls.keyReleased(key);
-	}
 }
