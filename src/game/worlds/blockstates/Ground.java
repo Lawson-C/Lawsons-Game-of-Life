@@ -12,6 +12,6 @@ public class Ground extends Block {
     public void display() {
         super.game.noStroke();
         super.game.fill(0, 10 * super.state + 50, 0);
-        super.game.box(super.size);
+        super.game.box(Block.size);
     }
 }

@@ -10,7 +10,7 @@ public class App {
     public static Life life;
 
     public static void main(String[] args) {
-        game = new GameApp(new Flat(100));
+        game = new GameApp(new Flat());
         life = new Life(false);
     }
 

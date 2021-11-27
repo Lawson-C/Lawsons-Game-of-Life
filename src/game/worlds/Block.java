@@ -4,9 +4,10 @@ import processing.core.PVector;
 import windows.GameApp;
 
 public abstract class Block {
+    public static final int size = 100;
+
     protected GameApp game;
     protected World world;
-    protected int size;
     protected Chunk hood;
     protected int indx, indy, indz; // indecies within chunk
     protected PVector pos;
@@ -15,13 +16,12 @@ public abstract class Block {
     public Block(Chunk hood, int indx, int indy, int indz, float state) {
         this.game = hood.getApplet();
         this.world = hood.getWorld();
-        this.size = game.getSize();
         this.hood = hood;
         this.indx = indx;
         this.indy = indy;
         this.indz = indz;
         this.state = state;
-        this.pos = new PVector(this.indx * this.size, this.indy * this.size, this.indz * this.size);
+        this.pos = new PVector(this.indx * Block.size, this.indy * Block.size, this.indz * Block.size);
     }
 
     /*
@@ -30,7 +30,7 @@ public abstract class Block {
     public abstract void display();
 
     public void transPos() {
-        this.game.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2, this.pos.z + this.size / 2);
+        this.game.translate(this.pos.x + Block.size / 2, this.pos.y + Block.size / 2, this.pos.z + Block.size / 2);
     }
 
     /*
@@ -64,6 +64,6 @@ public abstract class Block {
     }
 
     public PVector getCenter() {
-        return this.getRawCoords().add(this.size / 2, this.size / 2, this.size / 2);
+        return this.getRawCoords().add(Block.size / 2, Block.size / 2, Block.size / 2);
     }
 }

@@ -12,13 +12,11 @@ public class GameApp extends PApplet {
     protected Player player;
     protected World world;
     protected Generator gen;
-    protected int blockSize;
 
     protected ArrayList<KeyEvent> handlePress;
     protected ArrayList<KeyEvent> handleRelease;
 
     public GameApp(Generator g) {
-        this.blockSize = g.getSize();
         this.gen = g;
         this.world = new World(this);
         this.handlePress = new ArrayList<KeyEvent>();
@@ -69,10 +67,6 @@ public class GameApp extends PApplet {
 
     public World getWorld() {
         return this.world;
-    }
-
-    public int getSize() {
-        return this.blockSize;
     }
 
     public Generator getGen() {

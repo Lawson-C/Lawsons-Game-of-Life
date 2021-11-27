@@ -6,7 +6,6 @@ import windows.GameApp;
 
 public class Chunk {
     public static final int width = 8, height = 16;
-    public static int blockSize;
 
     private GameApp game;
     private World world;
@@ -15,7 +14,6 @@ public class Chunk {
 
     public Chunk(World world, int indx, int indz, Generator g) {
         this.game = world.game;
-        Chunk.blockSize = game.getSize();
         this.world = world;
         this.indx = indx;
         this.indz = indz;
@@ -33,6 +31,7 @@ public class Chunk {
                 }
             }
         }
+        chunkStroke();
     }
 
     public void chunkStroke() {
@@ -90,17 +89,17 @@ public class Chunk {
      */
     public Block getBlockRaw(float x, float y, float z) {
         PVector corner = this.getRawCoords();
-        int xi = (int) ((x - corner.x) / (Chunk.blockSize));
-        int yi = (int) ((y - corner.y) / (Chunk.blockSize));
-        int zi = (int) ((z - corner.z) / (Chunk.blockSize));
+        int xi = (int) ((x - corner.x) / (Block.size));
+        int yi = (int) ((y - corner.y) / (Block.size));
+        int zi = (int) ((z - corner.z) / (Block.size));
         return this.data[xi][yi][zi];
     }
 
     public static int rawWidth() {
-        return Chunk.width * Chunk.blockSize;
+        return Chunk.width * Block.size;
     }
 
     public static int rawHeight() {
-        return Chunk.height * Chunk.blockSize;
+        return Chunk.height * Block.size;
     }
 }
