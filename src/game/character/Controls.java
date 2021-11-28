@@ -80,6 +80,7 @@ public class Controls {
 	}
 
 	public void keyPressed(Character key) {
+		key = Character.toLowerCase(key);
 		try {
 			if (this.toggle.get(this.controls.get(key))) {
 				this.running.put(this.controls.get(key), !this.running.get(this.controls.get(key)));
@@ -91,6 +92,7 @@ public class Controls {
 	}
 
 	public void keyReleased(Character key) {
+		key = Character.toLowerCase(key);
 		try {
 			if (!toggle.get(this.controls.get(key))) {
 				this.running.put(this.controls.get(key), false);
