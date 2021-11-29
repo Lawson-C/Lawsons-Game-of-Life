@@ -7,7 +7,7 @@ import util.lambdas.ThreeCoords;
 import windows.GameApp;
 
 public class World {
-    final protected double renderDist = 4; // measured in units of chunks
+    final protected double renderDist = 2; // measured in units of chunks
 
     protected volatile LoopGrid<Chunk> data;
 
@@ -26,10 +26,19 @@ public class World {
     }
 
     public void renderBlocks() {
+        Block target = this.game.getP1().targetBlock();
         this.forRenderBlocks((x, y, z) -> {
             this.game.pushMatrix();
-            this.game.translate(x * Chunk.blockSize, y * Chunk.blockSize + Chunk.rawHeight(), z * Chunk.blockSize);
-            this.getBlock(x, y, z).display();
+            Block b = this.getBlock(x, y, z);
+            this.game.translate((x + .5f) * Block.size, (y + .5f) * Block.size + Chunk.rawHeight(),
+                    (z + .5f) * Block.size);
+            b.display();
+            if (b == target) {
+                this.game.noFill();
+                this.game.strokeWeight(5);
+                this.game.stroke(255, 255, 0);
+                this.game.box(Block.size);
+            }
             this.game.popMatrix();
         });
     }
@@ -66,15 +75,15 @@ public class World {
      */
     public Chunk getChunkRaw(float x, float z) {
         PVector p = this.getWorldCoords(x, z);
-        p.x /= Chunk.rawWidth();
-        p.z /= Chunk.rawWidth();
-        if (p.x < 0) {
-            p.x -= 1;
+        x = p.x / Chunk.rawWidth();
+        z = p.z / Chunk.rawWidth();
+        if (x < 0) {
+            x -= 1;
         }
-        if (p.z < 0) {
-            p.z -= 1;
+        if (z < 0) {
+            z -= 1;
         }
-        return this.data.get((int) (p.x), (int) (p.z));
+        return this.data.get((int) (x), (int) (z));
     }
 
     public Chunk getChunkRaw(PVector p) {
@@ -96,8 +105,7 @@ public class World {
      * returns block corresponding to raw coordinates
      */
     public Block getBlockRaw(float x, float y, float z) {
-        PVector p = this.getWorldCoords(x, y, z);
-        return this.getChunkRaw(p.x, p.z).getBlockRaw(p.x, p.y, p.z);
+        return this.getChunkRaw(x, z).getBlockRaw(x, y, z);
     }
 
     public Block getBlockRaw(PVector p) {
@@ -136,7 +144,7 @@ public class World {
         double rad = this.renderDist * Chunk.width;
         double halfFov = p1.getFOV() / 2. + Math.PI / 8;
         double pangle = p1.lookVector().x - Math.PI / 2;
-        PVector playerPos = p1.getPos().div(Chunk.blockSize);
+        PVector playerPos = p1.getPos().div(Block.size);
         playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
         for (double x = -rad; x < rad; x++) {
             double zBound = Math.sqrt(Math.pow(rad, 2) - Math.pow(x, 2));

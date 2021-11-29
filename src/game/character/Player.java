@@ -8,6 +8,8 @@ import processing.core.PVector;
 import windows.GameApp;
 
 public class Player {
+    public static final int range = 3;
+
     protected EpicCam cam;
     protected GameApp game;
     protected World world;
@@ -38,6 +40,8 @@ public class Player {
         this.game.rect(-500, -500, 2 * this.game.width, 2 * this.game.height);
         this.game.hint(PApplet.ENABLE_DEPTH_TEST);
         this.game.popMatrix();
+
+        this.world.getChunkRaw(this.getPos()).chunkStroke();
     }
 
     public EpicCam cam() {
@@ -56,16 +60,24 @@ public class Player {
         return new PVector().set(this.cam.getPos());
     }
 
-    public void keyPressed(Character key) {
-        this.cam.keyPressed(key);
-    }
-
-    public void keyReleased(Character key) {
-        this.cam.keyReleased(key);
-    }
-
     public float getTint() {
         Block b = this.world.getBlockRaw(this.cam.camPos());
         return b instanceof Air ? b.getState() * 10 : 0;
+    }
+
+    public Block targetBlock() {
+        PVector look = this.cam.lookVector();
+        PVector pos = this.getPos();
+        for (int h = 0; h <= range; h++) {
+            PVector diff = new PVector().set((float) (Block.size * Math.sqrt(3) * Math.cos(look.y) * Math.sin(look.x)),
+                    (float) (-Block.size * Math.sqrt(3) * Math.sin(look.y)),
+                    (float) (-Block.size * Math.sqrt(3) * Math.cos(look.y) * Math.cos(look.x)));
+            pos.add(diff);
+            Block b = this.world.getBlockRaw(pos);
+            if (h == range || !(b instanceof Air)) {
+                return b;
+            }
+        }
+        throw new NullPointerException("check for-loop probably");
     }
 }

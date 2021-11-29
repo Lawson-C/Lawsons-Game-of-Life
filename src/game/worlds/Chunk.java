@@ -31,7 +31,6 @@ public class Chunk {
                 }
             }
         }
-        chunkStroke();
     }
 
     public void chunkStroke() {
@@ -89,10 +88,13 @@ public class Chunk {
      */
     public Block getBlockRaw(float x, float y, float z) {
         PVector corner = this.getRawCoords();
-        int xi = (int) ((x - corner.x) / (Block.size));
-        int yi = (int) ((y - corner.y) / (Block.size));
-        int zi = (int) ((z - corner.z) / (Block.size));
-        return this.data[xi][yi][zi];
+        double xi = (x - corner.x) / ((double) Block.size);
+        double yi = (y - corner.y) / ((double) Block.size);
+        double zi = (z - corner.z) / ((double) Block.size);
+        xi = (int) Math.abs(xi) * Math.signum(xi);
+        yi = (int) Math.abs(yi) * Math.signum(yi);
+        zi = (int) Math.abs(zi) * Math.signum(zi);
+        return this.data[(int) (xi)][(int) (yi)][(int) (zi)];
     }
 
     public static int rawWidth() {
