@@ -71,12 +71,8 @@ public class Controls {
 		this.toggle.put(this.moves.get(8), true);
 		this.toggle.put(this.moves.get(9), true);
 
-		this.game.addPressHandle((Character key) -> {
-			this.keyPressed(key);
-		});
-		this.game.addReleaseHandle((Character key) -> {
-			this.keyReleased(key);
-		});
+		this.game.addPressHandle(this::keyPressed);
+		this.game.addReleaseHandle(this::keyReleased);
 	}
 
 	public void keyPressed(Character key) {

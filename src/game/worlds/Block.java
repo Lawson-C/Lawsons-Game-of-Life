@@ -1,5 +1,8 @@
 package game.worlds;
 
+import game.worlds.blockstates.Air;
+import game.worlds.blockstates.Ground;
+import game.worlds.blockstates.StateRanges;
 import processing.core.PVector;
 import windows.GameApp;
 
@@ -65,5 +68,20 @@ public abstract class Block {
 
     public PVector getCenter() {
         return this.getRawCoords().add(Block.size / 2, Block.size / 2, Block.size / 2);
+    }
+
+    public Block changeType(String type, float state) {
+        switch (type) {
+            case "Air":
+                return new Air(this.hood, this.indx, this.indy, this.indz, state);
+            case "Ground":
+                return new Ground(this.hood, this.indx, this.indy, this.indz, state);
+            default:
+                return null;
+        }
+    }
+
+    public Block changeType(String type) {
+        return this.changeType(type, StateRanges.get(type));
     }
 }

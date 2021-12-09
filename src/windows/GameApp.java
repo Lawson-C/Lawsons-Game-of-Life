@@ -7,6 +7,7 @@ import game.worlds.World;
 import game.worlds.generators.Generator;
 import processing.core.PApplet;
 import util.lambdas.KeyEvent;
+import util.lambdas.MousePress;
 
 public class GameApp extends PApplet {
     protected Player player;
@@ -15,12 +16,16 @@ public class GameApp extends PApplet {
 
     protected ArrayList<KeyEvent> handlePress;
     protected ArrayList<KeyEvent> handleRelease;
+    protected ArrayList<MousePress> handleMousePress;
+    protected ArrayList<MousePress> handleMouseRelease;
 
     public GameApp(Generator g) {
         this.gen = g;
         this.world = new World(this);
         this.handlePress = new ArrayList<KeyEvent>();
         this.handleRelease = new ArrayList<KeyEvent>();
+        this.handleMousePress = new ArrayList<MousePress>();
+        this.handleMouseRelease = new ArrayList<MousePress>();
         super.runSketch();
         // due to how processing works the rest of this constructor should be empty
     }
@@ -41,6 +46,8 @@ public class GameApp extends PApplet {
         return super.focused;
     }
 
+    // key event handlers
+
     public void keyPressed() {
         for (KeyEvent cb : this.handlePress) {
             cb.run(key);
@@ -60,6 +67,30 @@ public class GameApp extends PApplet {
     public void addReleaseHandle(KeyEvent cb) {
         this.handleRelease.add(cb);
     }
+
+    // mouse event handlers
+
+    public void mousePressed() {
+        for (MousePress cb : this.handleMousePress) {
+            cb.run(super.mouseButton);
+        }
+    }
+
+    public void mouseReleased() {
+        for (MousePress cb : this.handleMouseRelease) {
+            cb.run(super.mouseButton);
+        }
+    }
+
+    public void addPressHandle(MousePress cb) {
+        this.handleMousePress.add(cb);
+    }
+
+    public void addReleaseHandle(MousePress cb) {
+        this.handleMouseRelease.add(cb);
+    }
+
+    // getters
 
     public Player getP1() {
         return this.player;

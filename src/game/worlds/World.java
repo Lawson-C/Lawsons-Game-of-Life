@@ -105,7 +105,8 @@ public class World {
      * returns block corresponding to raw coordinates
      */
     public Block getBlockRaw(float x, float y, float z) {
-        return this.getChunkRaw(x, z).getBlockRaw(x, y, z);
+        PVector p = this.getWorldCoords(x, y, z);
+        return this.getChunkRaw(p.x, p.z).getBlockRaw(p.x, p.y, p.z);
     }
 
     public Block getBlockRaw(PVector p) {
@@ -143,7 +144,7 @@ public class World {
         Player p1 = this.game.getP1();
         double rad = this.renderDist * Chunk.width;
         double halfFov = p1.getFOV() / 2. + Math.PI / 8;
-        double pangle = p1.lookVector().x - Math.PI / 2;
+        double pangle = p1.lookAngle().x - Math.PI / 2;
         PVector playerPos = p1.getPos().div(Block.size);
         playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
         for (double x = -rad; x < rad; x++) {
@@ -171,5 +172,10 @@ public class World {
                 }
             }
         }
+    }
+
+    public void placeBlockRaw(float x, float y, float z, String block) {
+        Block b = this.getBlockRaw(x, y, z);
+        this.getChunkRaw(x, z).setBlockRaw(x, y, z, b.changeType("Air"));
     }
 }

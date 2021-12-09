@@ -5,25 +5,29 @@ import game.worlds.World;
 import game.worlds.blockstates.Air;
 import processing.core.PApplet;
 import processing.core.PVector;
+import util.lambdas.MousePress;
 import windows.GameApp;
 
 public class Player {
-    public static final int range = 3;
+    public static final int range = 5;
 
     protected EpicCam cam;
     protected GameApp game;
     protected World world;
 
     public Player(GameApp game) {
-        this.cam = new EpicCam(game);
-        this.game = game;
-        this.world = game.getWorld();
+        this(game, null);
     }
 
     public Player(GameApp game, PVector spawn) {
-        this.cam = new EpicCam(game, spawn);
+        if (spawn == null) {
+            this.cam = new EpicCam(game);
+        } else {
+            this.cam = new EpicCam(game, spawn);
+        }
         this.game = game;
         this.world = game.getWorld();
+        this.game.addPressHandle((MousePress) this::onPress);
     }
 
     public void periodic() {
@@ -48,8 +52,8 @@ public class Player {
         return this.cam;
     }
 
-    public PVector lookVector() {
-        return this.cam.lookVector();
+    public PVector lookAngle() {
+        return this.cam.lookAngle();
     }
 
     public float getFOV() {
@@ -67,17 +71,29 @@ public class Player {
 
     public Block targetBlock() {
         PVector look = this.cam.lookVector();
-        PVector pos = this.getPos();
-        for (int h = 0; h <= range; h++) {
-            PVector diff = new PVector().set((float) (Block.size * Math.sqrt(3) * Math.cos(look.y) * Math.sin(look.x)),
-                    (float) (-Block.size * Math.sqrt(3) * Math.sin(look.y)),
-                    (float) (-Block.size * Math.sqrt(3) * Math.cos(look.y) * Math.cos(look.x)));
-            pos.add(diff);
+        float bFactor = 1.f;
+        look.mult(Block.size / bFactor);
+        PVector pos = this.cam.camPos();
+        for (float h = 0; h <= range; h += 1 / bFactor) {
+            pos.add(look);
             Block b = this.world.getBlockRaw(pos);
             if (h == range || !(b instanceof Air)) {
                 return b;
             }
         }
-        throw new NullPointerException("check for-loop probably");
+        throw new NullPointerException("check Player.java line 68 for-loop probably");
+    }
+
+    public void onPress(int button) {
+        Block b = this.targetBlock();
+        PVector p = b.getCenter();
+        switch (button) {
+            case 37:
+                this.world.placeBlockRaw(p.x, p.y, p.z, "Air");
+                break;
+            case 39:
+                this.world.placeBlockRaw(p.x, p.y, p.z, "Ground");
+                break;
+        }
     }
 }

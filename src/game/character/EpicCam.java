@@ -168,9 +168,10 @@ public class EpicCam {
 
 	void crossHair() {
 		this.game.pushMatrix();
-		this.game.translate(this.position.x + this.camTran.x + 2 * PApplet.cos(this.look.y) * PApplet.sin(this.look.x),
-				this.position.y + this.camTran.y - 2 * PApplet.sin(this.look.y),
-				this.position.z + this.camTran.z - 2 * PApplet.cos(this.look.y) * PApplet.cos(this.look.x));
+		PVector crossPos = this.lookVector().mult(2);
+		this.game.translate(this.position.x + this.camTran.x + crossPos.x,
+				this.position.y + this.camTran.y + crossPos.y,
+				this.position.z + this.camTran.z + crossPos.z);
 		this.game.strokeWeight(5);
 		this.game.stroke(0, 255, 0);
 		this.game.line(0, 0, 0, (float) -.15);
@@ -182,8 +183,14 @@ public class EpicCam {
 		this.game.noCursor();
 	}
 
-	public PVector lookVector() {
+	public PVector lookAngle() {
 		return new PVector().set(this.look);
+	}
+
+	public PVector lookVector() {
+		return new PVector(PApplet.cos(this.look.y) * PApplet.sin(this.look.x),
+				-PApplet.sin(this.look.y),
+				-PApplet.cos(this.look.y) * PApplet.cos(this.look.x));
 	}
 
 	public PVector getPos() {
