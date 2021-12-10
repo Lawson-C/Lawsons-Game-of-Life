@@ -71,17 +71,18 @@ public class Player {
 
     public Block targetBlock() {
         PVector look = this.cam.lookVector();
-        float bFactor = 1.f;
-        look.mult(Block.size / bFactor);
+        float bFactor = .25f;
+        look.mult(Block.size * bFactor);
         PVector pos = this.cam.camPos();
-        for (float h = 0; h <= range; h += 1 / bFactor) {
+        Block b = null;
+        for (float h = 0; h <= range; h += bFactor) {
             pos.add(look);
-            Block b = this.world.getBlockRaw(pos);
-            if (h == range || !(b instanceof Air)) {
+            b = this.world.getBlockRaw(pos);
+            if (!(b instanceof Air)) {
                 return b;
             }
         }
-        throw new NullPointerException("check Player.java line 68 for-loop probably");
+        return b;
     }
 
     public void onPress(int button) {

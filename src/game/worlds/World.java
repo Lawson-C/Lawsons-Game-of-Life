@@ -176,6 +176,6 @@ public class World {
 
     public void placeBlockRaw(float x, float y, float z, String block) {
         Block b = this.getBlockRaw(x, y, z);
-        this.getChunkRaw(x, z).setBlockRaw(x, y, z, b.changeType("Air"));
+        this.getChunkRaw(x, z).setBlockRaw(x, y, z, b.changeType(block));
     }
 }
