@@ -74,7 +74,7 @@ public class Player {
         float bFactor = .25f;
         look.mult(Block.size * bFactor);
         PVector pos = this.cam.camPos();
-        Block b = null;
+        Block b;
         for (float h = 0; h <= range; h += bFactor) {
             pos.add(look);
             b = this.world.getBlockRaw(pos);
@@ -82,19 +82,43 @@ public class Player {
                 return b;
             }
         }
-        return b;
+        return null;
     }
 
     public void onPress(int button) {
         Block b = this.targetBlock();
-        PVector p = b.getCenter();
+        PVector p = null;
+        if (b != null) {
+            p = b.getCenter();
+        }
         switch (button) {
             case 37:
-                this.world.placeBlockRaw(p.x, p.y, p.z, "Air");
+                if (b != null) {
+                    this.placeBlock(p.x, p.y, p.z, "Air");
+                }
                 break;
             case 39:
-                this.world.placeBlockRaw(p.x, p.y, p.z, "Ground");
+                if (b != null) {
+                    this.placeBlock(p.x, p.y, p.z, "Ground");
+                }
                 break;
         }
+    }
+
+    public void placeBlock(float x, float y, float z, String type) {
+        Block b = this.world.getBlockRaw(x, y, z);
+        if (!type.equals("Air")) {
+            PVector p = this.cam.camPos()
+                    .sub(b.getCenter())
+                    .add(this.cam.lookVector()
+                            .setMag(-b.getCenter()
+                                    .dist(this.cam.camPos())));
+            p.x = (p.x > p.z ? 1 : 0);
+            p.z = (p.z > p.x ? 1 : 0);
+            p.mult(Block.size);
+            x += p.x;
+            z += p.z;
+        }
+        this.world.placeBlockRaw(x, y, z, type);
     }
 }
