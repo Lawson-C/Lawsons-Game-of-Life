@@ -57,7 +57,7 @@ public class EpicCam {
 			// nothing for now
 		}
 		// landing
-		if (this.position.y > this.floor - this.kHeight) {
+		if (this.position.y + this.move.y > this.floor - this.kHeight) {
 			this.position.y = this.floor - this.kHeight;
 			this.controls.setRunning("jump", false);
 		}
