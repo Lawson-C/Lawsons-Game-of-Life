@@ -51,11 +51,16 @@ public class EpicCam {
 	}
 
 	public void update() {
+		// falling
+		if (this.position.y < this.floor - this.kHeight) {
+			// nothing for now
+		}
+		// landing
 		if (this.position.y > this.floor - this.kHeight) {
 			this.position.y = this.floor - this.kHeight;
 			this.controls.setRunning("jump", false);
 		}
-		if (this.controls.getRunning("jump")) {
+		if (this.position.y != this.floor - this.kHeight || this.controls.getRunning("jump")) {
 			this.move.y += this.controls.getGravity();
 		} else {
 			this.move.y = 0;
@@ -191,12 +196,24 @@ public class EpicCam {
 				-PApplet.cos(this.look.y) * PApplet.cos(this.look.x));
 	}
 
+	public void setFloor(float level) {
+		this.floor = level;
+	}
+
 	public PVector getPos() {
-		return this.position;
+		return new PVector().set(this.position);
 	}
 
 	public PVector camPos() {
 		return new PVector().set(this.position).add(this.camTran);
+	}
+
+	public PVector footPos() {
+		return this.getPos().add(0, this.kHeight);
+	}
+
+	public float footLevel() {
+		return this.position.y + this.kHeight;
 	}
 
 	public float getHeight() {

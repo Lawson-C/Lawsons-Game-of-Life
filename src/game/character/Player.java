@@ -31,6 +31,11 @@ public class Player {
     }
 
     public void periodic() {
+        float buffer = 0;
+        while (this.world.getBlockRaw(this.cam.footPos().add(0, buffer, 0)) instanceof Air) {
+            buffer += Block.size / 2.;
+        }
+        this.cam.setFloor(this.world.getBlockRaw(this.cam.footPos().add(0, buffer)).getRawCoords().y);
         this.cam.periodic();
     }
 
@@ -73,7 +78,7 @@ public class Player {
         PVector look = this.cam.lookVector();
         float bFactor = .25f;
         look.mult(Block.size * bFactor);
-        PVector pos = this.cam.camPos();
+        PVector pos = this.cam.getPos();
         Block b;
         for (float h = 0; h <= range; h += bFactor) {
             pos.add(look);
@@ -108,11 +113,11 @@ public class Player {
     public void placeBlock(float x, float y, float z, String type) {
         Block b = this.world.getBlockRaw(x, y, z);
         if (!type.equals("Air")) {
-            PVector p = this.cam.camPos()
+            PVector p = this.cam.getPos()
                     .sub(b.getCenter())
                     .add(this.cam.lookVector()
                             .setMag(-b.getCenter()
-                                    .dist(this.cam.camPos())));
+                                    .dist(this.cam.getPos())));
             p.x = (p.x > p.z ? 1 : 0);
             p.z = (p.z > p.x ? 1 : 0);
             p.mult(Block.size);
