@@ -42,6 +42,7 @@ public class EpicCam {
 
 	public void periodic() {
 		this.handleKeys();
+		this.collision();
 		this.update();
 	}
 
@@ -50,7 +51,7 @@ public class EpicCam {
 		this.run();
 	}
 
-	public void update() {
+	public void collision() {
 		// falling
 		if (this.position.y < this.floor - this.kHeight) {
 			// nothing for now
@@ -66,6 +67,9 @@ public class EpicCam {
 			this.move.y = 0;
 			this.position.y = this.floor - this.kHeight;
 		}
+	}
+
+	public void update() {
 		this.position.add(this.move);
 		this.game.camera(this.position.x + this.camTran.x, this.position.y + this.camTran.y,
 				this.position.z + this.camTran.z, this.position.x, this.position.y, this.position.z - 10, 0, 1, 0);

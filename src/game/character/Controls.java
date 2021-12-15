@@ -13,8 +13,8 @@ public class Controls {
 	private float horizSensitivity = 25;
 	private float power = 25;
 	private float tiltPower = 15;
-	private float jumpPower = 20;
-	private float gravity = 1;
+	private float jumpPower = 30f;
+	private float gravity = 3f;
 	private boolean vertLookLock = false;
 	private boolean horizLookLock = false;
 
