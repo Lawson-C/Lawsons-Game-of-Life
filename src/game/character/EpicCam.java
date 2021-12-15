@@ -35,14 +35,14 @@ public class EpicCam {
 		}
 		this.position = new PVector(floor.x, floor.y - this.kHeight, floor.z);
 		this.floor = floor.y;
-		this.fov = PApplet.radians(110);
+		this.fov = PApplet.radians(90);
 
 		this.controls = new Controls(this.game);
 	}
 
 	public void periodic() {
-		this.update();
 		this.handleKeys();
+		this.update();
 	}
 
 	public void handleKeys() {
@@ -53,14 +53,13 @@ public class EpicCam {
 	public void update() {
 		if (this.position.y > this.floor - this.kHeight) {
 			this.position.y = this.floor - this.kHeight;
-			this.controls.setJumping(false);
+			this.controls.setRunning("jump", false);
 		}
-		if (this.controls.getJumping()) {
+		if (this.controls.getRunning("jump")) {
 			this.move.y += this.controls.getGravity();
 		} else {
 			this.move.y = 0;
 			this.position.y = this.floor - this.kHeight;
-			this.controls.setRunning("jump", false);
 		}
 		this.position.add(this.move);
 		this.game.camera(this.position.x + this.camTran.x, this.position.y + this.camTran.y,
@@ -89,8 +88,7 @@ public class EpicCam {
 			this.move.x = this.controls.getPower() * PApplet.cos(this.look.x);
 			this.move.z = this.controls.getPower() * PApplet.sin(this.look.x);
 		}
-		if (this.controls.getRunning("jump") && !this.controls.getJumping()) {
-			this.controls.setJumping(true);
+		if (this.controls.getRunning("jump") && this.position.y + this.kHeight >= this.floor && this.move.y == 0) {
 			this.move.y = -this.controls.getJumpPower();
 		}
 		if (this.controls.getRunning("lean left")) {

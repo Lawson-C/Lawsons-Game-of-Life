@@ -6,7 +6,7 @@ import java.util.HashMap;
 import windows.GameApp;
 
 public class Controls {
-	GameApp game;
+	private GameApp game;
 
 	// sensitivity cannot be 0
 	private float vertSensitivity = 25;
@@ -17,7 +17,6 @@ public class Controls {
 	private float gravity = 1;
 	private boolean vertLookLock = false;
 	private boolean horizLookLock = false;
-	private boolean jumping = false;
 
 	private ArrayList<String> moves = new ArrayList<String>();
 	private HashMap<String, Boolean> running = new HashMap<String, Boolean>();
@@ -90,7 +89,7 @@ public class Controls {
 	public void keyReleased(Character key) {
 		key = Character.toLowerCase(key);
 		try {
-			if (!toggle.get(this.controls.get(key))) {
+			if (!toggle.get(this.controls.get(key)) && !this.controls.get(key).equals("jump")) {
 				this.running.put(this.controls.get(key), false);
 			}
 		} catch (NullPointerException e) {
@@ -131,14 +130,6 @@ public class Controls {
 
 	public boolean getHorizLock() {
 		return this.horizLookLock;
-	}
-
-	public boolean getJumping() {
-		return this.jumping;
-	}
-
-	public void setJumping(boolean b) {
-		this.jumping = b;
 	}
 
 	public void setRunning(String s, boolean b) {
