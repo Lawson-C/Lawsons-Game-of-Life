@@ -1,30 +1,35 @@
 package game.character;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import processing.core.PVector;
 import windows.GameApp;
 
 public class Controls {
-	GameApp game;
-
 	// sensitivity cannot be 0
-	private float vertSensitivity = 25;
-	private float horizSensitivity = 25;
-	private float power = 25;
-	private float tiltPower = 15;
-	private float jumpPower = 20;
-	private float gravity = 1;
-	private boolean vertLookLock = false;
-	private boolean horizLookLock = false;
-	private boolean jumping = false;
+	protected float vertSensitivity = 25;
+	protected float horizSensitivity = 25;
+	protected float tiltPower = 15;
+	protected boolean vertLookLock = false;
+	protected boolean horizLookLock = false;
 
-	private ArrayList<String> moves = new ArrayList<String>();
-	private HashMap<String, Boolean> running = new HashMap<String, Boolean>();
-	private HashMap<String, Boolean> toggle = new HashMap<String, Boolean>();
-	private HashMap<Character, String> controls = new HashMap<Character, String>();
+	protected ArrayList<String> moves = new ArrayList<String>();
+	protected HashMap<String, Boolean> running = new HashMap<String, Boolean>();
+	protected HashMap<String, Boolean> toggle = new HashMap<String, Boolean>();
+	protected HashMap<Character, String> controls = new HashMap<Character, String>();
+
+	protected GameApp game;
+	protected Robot bot;
 
 	Controls(GameApp game) {
+		try {
+			this.bot = new Robot();
+		} catch (AWTException e) {
+			System.out.println(e + "\n" + "fuck");
+		}
 		this.game = game;
 
 		this.moves.add("forward"); // 0
@@ -90,74 +95,85 @@ public class Controls {
 	public void keyReleased(Character key) {
 		key = Character.toLowerCase(key);
 		try {
-			if (!toggle.get(this.controls.get(key))) {
+			if (!toggle.get(this.controls.get(key)) && !this.controls.get(key).equals("jump")) {
 				this.running.put(this.controls.get(key), false);
 			}
 		} catch (NullPointerException e) {
 		}
 	}
 
-	public float getVertSense() {
-		return this.vertSensitivity;
+	public PVector getRotation() {
+		PVector diff = new PVector();
+		if (this.running.get("mouse lock")) {
+			if (!this.horizLookLock && this.game.mouseX > 0) {
+				diff.add((float) Math
+						.toRadians((this.game.mouseX - this.game.width / 2.) * (this.horizSensitivity / 100.)),
+						0);
+			}
+			if (!this.vertLookLock && this.game.mouseY > 0) {
+				diff.add(0, -(float) Math
+						.toRadians((this.game.mouseY - this.game.height / 2.) * (this.vertSensitivity / 100.)));
+			}
+			if (this.game.isFocused()) {
+				this.bot.mouseMove(2 * 1920 / 5, 2 * 1080 / 5);
+			}
+		} else {
+			if (!this.horizLookLock && this.game.mouseX > 0) {
+				diff.add((float) Math
+						.toRadians((this.game.mouseX - this.game.pmouseX) * (this.horizSensitivity / 100.)), 0);
+			}
+			if (!this.vertLookLock && this.game.mouseY > 0) {
+				diff.add(0, -(float) Math
+						.toRadians((this.game.mouseY - this.game.pmouseY) * (this.vertSensitivity / 100.)));
+			}
+		}
+		return diff;
 	}
 
-	public float getHorizSense() {
-		return this.horizSensitivity;
+	public float getTilt() {
+		if (running.get("lean left")) {
+			return this.tiltPower;
+		} else if (running.get("lean right")) {
+			return -this.tiltPower;
+		} else {
+			return 0;
+		}
 	}
 
-	public float getPower() {
-		return this.power;
+	public void setJump(boolean b) {
+		this.running.put("jump", b);
 	}
 
-	public void setPower(float p) {
-		this.power = p;
+	public boolean getJump() {
+		return this.running.get("jump");
 	}
 
-	public float getTiltPower() {
-		return this.tiltPower;
+	public float jumpPower() {
+		return 30f;
 	}
 
-	public float getJumpPower() {
-		return this.jumpPower;
+	public String getMove() {
+		if (this.running.get("forward")) {
+			return "forward";
+		} else if (this.running.get("back")) {
+			return "back";
+		} else if (this.running.get("left")) {
+			return "left";
+		} else if (this.running.get("right")) {
+			return "right";
+		}
+		return "stop";
+	}
+
+	public float power() {
+		return this.running.get("sprint") ? 50 : 25;
 	}
 
 	public float getGravity() {
-		return this.gravity;
+		return 3f;
 	}
 
-	public boolean getVertLock() {
-		return this.vertLookLock;
-	}
-
-	public boolean getHorizLock() {
-		return this.horizLookLock;
-	}
-
-	public boolean getJumping() {
-		return this.jumping;
-	}
-
-	public void setJumping(boolean b) {
-		this.jumping = b;
-	}
-
-	public void setRunning(String s, boolean b) {
-		this.running.put(s, b);
-	}
-
-	public boolean getRunning(String s) {
-		return this.running.get(s);
-	}
-
-	public HashMap<String, Boolean> getRunning() {
-		return this.running;
-	}
-
-	public HashMap<String, Boolean> getToggle() {
-		return this.toggle;
-	}
-
-	public HashMap<Character, String> getControls() {
-		return this.controls;
+	public boolean thirdPerson() {
+		return this.running.get("3rd person");
 	}
 }
