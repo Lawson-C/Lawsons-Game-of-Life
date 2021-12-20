@@ -13,8 +13,6 @@ public class Controls {
 	protected float vertSensitivity = 25;
 	protected float horizSensitivity = 25;
 	protected float tiltPower = 15;
-	protected float jumpPower = 30f;
-	protected float gravity = 3f;
 	protected boolean vertLookLock = false;
 	protected boolean horizLookLock = false;
 
@@ -151,7 +149,7 @@ public class Controls {
 	}
 
 	public float jumpPower() {
-		return this.jumpPower;
+		return 30f;
 	}
 
 	public String getMove() {
@@ -172,7 +170,7 @@ public class Controls {
 	}
 
 	public float getGravity() {
-		return this.gravity;
+		return 3f;
 	}
 
 	public boolean thirdPerson() {

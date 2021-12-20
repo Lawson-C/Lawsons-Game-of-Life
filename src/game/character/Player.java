@@ -59,7 +59,7 @@ public class Player {
                 this.moveRight(power);
                 break;
             default:
-                this.move.set(0, 0, 0);
+                this.stop();
                 break;
         }
         // jumping
@@ -77,15 +77,13 @@ public class Player {
             // nothing for now
         }
         // landing
-        if (this.position.y + this.move.y > this.floor - this.height) {
+        if (this.midAir() || this.controls.getJump()) {
+            this.move.y += this.controls.getGravity();
+        }
+        if (this.position.y + this.move.y >= this.floor - this.height) {
             this.position.y = this.floor - this.height;
             this.controls.setJump(false);
-        }
-        if (this.position.y != this.floor - this.height || this.controls.getJump()) {
-            this.move.y += this.controls.getGravity();
-        } else {
             this.move.y = 0;
-            this.position.y = this.floor - this.height;
         }
     }
 
@@ -182,7 +180,7 @@ public class Player {
     }
 
     public boolean midAir() {
-        return this.position.y + this.height < this.floor || this.move.y != 0;
+        return this.position.y != this.floor - this.height;
     }
 
     public void moveForward(float power) {
