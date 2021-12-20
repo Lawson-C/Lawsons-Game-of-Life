@@ -12,19 +12,25 @@ public class Player {
     public static final int range = 5;
 
     protected EpicCam cam;
+    protected Controls controls;
     protected GameApp game;
     protected World world;
+
+    protected float floor;
+    protected float height = 150;
+    protected PVector move = new PVector();
+    protected PVector position = new PVector();
 
     public Player(GameApp game) {
         this(game, null);
     }
 
     public Player(GameApp game, PVector spawn) {
-        if (spawn == null) {
-            this.cam = new EpicCam(game);
-        } else {
-            this.cam = new EpicCam(game, spawn);
-        }
+        this.controls = new Controls(game);
+        this.cam = spawn == null ? new EpicCam(game, this.controls) : new EpicCam(game, this.controls, spawn);
+        this.position = new PVector().set(spawn).sub(0, this.height);
+        this.floor = spawn.y;
+
         this.game = game;
         this.world = game.getWorld();
         this.game.addPressHandle((MousePress) this::onPress);
@@ -32,11 +38,55 @@ public class Player {
 
     public void periodic() {
         float buffer = 0;
-        while (this.world.getBlockRaw(this.cam.footPos().add(0, buffer, 0)) instanceof Air) {
+        while (this.world.getBlockRaw(this.footPos().add(0, buffer, 0)) instanceof Air) {
             buffer += Block.size / 2.;
         }
-        this.cam.setFloor(this.world.getBlockRaw(this.cam.footPos().add(0, buffer)).getRawCoords().y);
-        this.cam.periodic();
+        this.floor = this.world.getBlockRaw(this.footPos().add(0, buffer)).getRawCoords().y;
+        // strafing
+        String move = this.controls.getMove();
+        float power = this.controls.power();
+        switch (move) {
+            case "forward":
+                this.moveForward(power);
+                break;
+            case "back":
+                this.moveBack(power);
+                break;
+            case "left":
+                this.moveLeft(power);
+                break;
+            case "right":
+                this.moveRight(power);
+                break;
+            default:
+                this.move.set(0, 0, 0);
+                break;
+        }
+        // jumping
+        if (this.controls.getJump() && !this.midAir()) {
+            this.move.y = -this.controls.jumpPower();
+        }
+        this.collision();
+        this.position.add(this.move);
+        this.cam.update(this.position);
+    }
+
+    public void collision() {
+        // falling
+        if (this.position.y < this.floor - this.height) {
+            // nothing for now
+        }
+        // landing
+        if (this.position.y + this.move.y > this.floor - this.height) {
+            this.position.y = this.floor - this.height;
+            this.controls.setJump(false);
+        }
+        if (this.position.y != this.floor - this.height || this.controls.getJump()) {
+            this.move.y += this.controls.getGravity();
+        } else {
+            this.move.y = 0;
+            this.position.y = this.floor - this.height;
+        }
     }
 
     public void hud() {
@@ -66,7 +116,11 @@ public class Player {
     }
 
     public PVector getPos() {
-        return new PVector().set(this.cam.getPos());
+        return new PVector().set(this.position);
+    }
+
+    public PVector footPos() {
+        return this.getPos().add(0, this.height);
     }
 
     public float getTint() {
@@ -125,5 +179,34 @@ public class Player {
             z += p.z;
         }
         this.world.placeBlockRaw(x, y, z, type);
+    }
+
+    public boolean midAir() {
+        return this.position.y + this.height < this.floor || this.move.y != 0;
+    }
+
+    public void moveForward(float power) {
+        this.move.x = power * PApplet.sin(this.cam.lookAngle().x);
+        this.move.z = -power * PApplet.cos(this.cam.lookAngle().x);
+    }
+
+    public void moveBack(float power) {
+        this.move.x = -power * PApplet.sin(this.cam.lookAngle().x);
+        this.move.z = power * PApplet.cos(this.cam.lookAngle().x);
+    }
+
+    public void moveLeft(float power) {
+        this.move.x = -power * PApplet.cos(this.cam.lookAngle().x);
+        this.move.z = -power * PApplet.sin(this.cam.lookAngle().x);
+    }
+
+    public void moveRight(float power) {
+        this.move.x = power * PApplet.cos(this.cam.lookAngle().x);
+        this.move.z = power * PApplet.sin(this.cam.lookAngle().x);
+    }
+
+    public void stop() {
+        this.move.x = 0;
+        this.move.z = 0;
     }
 }
