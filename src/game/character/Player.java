@@ -85,6 +85,22 @@ public class Player {
             this.controls.setJump(false);
             this.move.y = 0;
         }
+        // strafing
+        float buffer = 20.f;
+        for (int lvl = 0; lvl <= 1; lvl++) {
+            Block xBlock = this.world.getBlockRaw(
+                    this.getPos().add(this.move.x + Math.signum(this.move.x) * buffer, lvl * Block.size));
+            if (!(xBlock instanceof Air)) {
+                this.position.x = xBlock.getCenter().x - (Block.size / 2.f + buffer) * Math.signum(this.move.x);
+                this.move.x = 0;
+            }
+            Block zBlock = this.world.getBlockRaw(
+                    this.getPos().add(0, lvl * Block.size, this.move.z + Math.signum(this.move.z) * buffer));
+            if (!(zBlock instanceof Air)) {
+                this.position.z = zBlock.getCenter().z - (Block.size / 2.f + buffer) * Math.signum(this.move.z);
+                this.move.z = 0;
+            }
+        }
     }
 
     public void hud() {

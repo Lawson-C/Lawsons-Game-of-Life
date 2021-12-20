@@ -21,7 +21,7 @@ public class EpicCam {
 		this.game = game;
 		this.controls = controls;
 		this.position = new PVector().set(pos);
-		this.fov = PApplet.radians(90);
+		this.fov = PApplet.radians(110);
 	}
 
 	public void update(PVector newPos) {
