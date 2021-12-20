@@ -165,16 +165,16 @@ public class Player {
     public void placeBlock(float x, float y, float z, String type) {
         Block b = this.world.getBlockRaw(x, y, z);
         if (!type.equals("Air")) {
-            PVector p = this.cam.getPos()
-                    .sub(b.getCenter())
-                    .add(this.cam.lookVector()
-                            .setMag(-b.getCenter()
-                                    .dist(this.cam.getPos())));
-            p.x = (p.x > p.z ? 1 : 0);
-            p.z = (p.z > p.x ? 1 : 0);
-            p.mult(Block.size);
-            x += p.x;
-            z += p.z;
+            PVector p = new PVector().set(this.position).sub(b.getCenter());
+            p.add(this.cam.lookVector().setMag(p.mag()));
+            // this almost worked
+            double theta = Math.atan2(p.x, p.z);
+            double theta2 = Math.atan2(p.y, Math.sqrt(p.x * p.x + p.z * p.z));
+            theta = (int) (theta * 2.d / Math.PI) * Math.PI / 2.d;
+            theta2 = (int) (theta2 * 2.d / Math.PI) * Math.PI / 2.d;
+            x += (int) (Math.cos(theta2) * Math.sin(theta)) * Block.size;
+            y += (int) (Math.sin(theta2)) * Block.size;
+            z += (int) (Math.cos(theta2) * Math.cos(theta)) * Block.size;
         }
         this.world.placeBlockRaw(x, y, z, type);
     }
