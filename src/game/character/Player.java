@@ -13,7 +13,6 @@ public class Player {
 
     protected EpicCam cam;
     protected Controls controls;
-    protected GameApp game;
     protected World world;
 
     protected float floor;
@@ -21,19 +20,18 @@ public class Player {
     protected PVector move = new PVector();
     protected PVector position = new PVector();
 
-    public Player(GameApp game) {
-        this(game, null);
+    public Player() {
+        this(null);
     }
 
-    public Player(GameApp game, PVector spawn) {
-        this.controls = new Controls(game);
-        this.cam = spawn == null ? new EpicCam(game, this.controls) : new EpicCam(game, this.controls, spawn);
+    public Player(PVector spawn) {
+        this.controls = new Controls();
+        this.cam = spawn == null ? new EpicCam(this.controls) : new EpicCam(this.controls, spawn);
         this.position = new PVector().set(spawn).sub(0, this.height);
         this.floor = spawn.y;
 
-        this.game = game;
-        this.world = game.getWorld();
-        this.game.addPressHandle((MousePress) this::onPress);
+        this.world = GameApp.getInstance().getWorld();
+        GameApp.addPressHandle((MousePress) this::onPress);
     }
 
     public void periodic() {
@@ -104,15 +102,15 @@ public class Player {
     }
 
     public void hud() {
-        this.game.pushMatrix();
-        this.game.camera();
-        this.game.hint(PApplet.DISABLE_DEPTH_TEST);
+        GameApp.getInstance().pushMatrix();
+        GameApp.getInstance().camera();
+        GameApp.getInstance().hint(PApplet.DISABLE_DEPTH_TEST);
 
-        this.game.noStroke();
-        this.game.fill(255, this.getTint());
-        this.game.rect(-500, -500, 2 * this.game.width, 2 * this.game.height);
-        this.game.hint(PApplet.ENABLE_DEPTH_TEST);
-        this.game.popMatrix();
+        GameApp.getInstance().noStroke();
+        GameApp.getInstance().fill(255, this.getTint());
+        GameApp.getInstance().rect(-500, -500, 2 * GameApp.getInstance().width, 2 * GameApp.getInstance().height);
+        GameApp.getInstance().hint(PApplet.ENABLE_DEPTH_TEST);
+        GameApp.getInstance().popMatrix();
 
         this.world.getChunkRaw(this.getPos()).chunkStroke();
     }

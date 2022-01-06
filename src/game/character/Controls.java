@@ -21,16 +21,14 @@ public class Controls {
 	protected HashMap<String, Boolean> toggle = new HashMap<String, Boolean>();
 	protected HashMap<Character, String> controls = new HashMap<Character, String>();
 
-	protected GameApp game;
 	protected Robot bot;
 
-	Controls(GameApp game) {
+	Controls() {
 		try {
 			this.bot = new Robot();
 		} catch (AWTException e) {
 			System.out.println(e + "\n" + "fuck");
 		}
-		this.game = game;
 
 		this.moves.add("forward"); // 0
 		this.moves.add("back"); // 1
@@ -76,8 +74,8 @@ public class Controls {
 		this.toggle.put(this.moves.get(8), true);
 		this.toggle.put(this.moves.get(9), true);
 
-		this.game.addPressHandle(this::keyPressed);
-		this.game.addReleaseHandle(this::keyReleased);
+		GameApp.addPressHandle(this::keyPressed);
+		GameApp.addReleaseHandle(this::keyReleased);
 	}
 
 	public void keyPressed(Character key) {
@@ -105,26 +103,31 @@ public class Controls {
 	public PVector getRotation() {
 		PVector diff = new PVector();
 		if (this.running.get("mouse lock")) {
-			if (!this.horizLookLock && this.game.mouseX > 0) {
+			if (!this.horizLookLock && GameApp.getInstance().mouseX > 0) {
 				diff.add((float) Math
-						.toRadians((this.game.mouseX - this.game.width / 2.) * (this.horizSensitivity / 100.)),
+						.toRadians((GameApp.getInstance().mouseX - GameApp.getInstance().width / 2.)
+								* (this.horizSensitivity / 100.)),
 						0);
 			}
-			if (!this.vertLookLock && this.game.mouseY > 0) {
+			if (!this.vertLookLock && GameApp.getInstance().mouseY > 0) {
 				diff.add(0, -(float) Math
-						.toRadians((this.game.mouseY - this.game.height / 2.) * (this.vertSensitivity / 100.)));
+						.toRadians((GameApp.getInstance().mouseY - GameApp.getInstance().height / 2.)
+								* (this.vertSensitivity / 100.)));
 			}
-			if (this.game.isFocused()) {
+			if (GameApp.getInstance().isFocused()) {
 				this.bot.mouseMove(2 * 1920 / 5, 2 * 1080 / 5);
 			}
 		} else {
-			if (!this.horizLookLock && this.game.mouseX > 0) {
+			if (!this.horizLookLock && GameApp.getInstance().mouseX > 0) {
 				diff.add((float) Math
-						.toRadians((this.game.mouseX - this.game.pmouseX) * (this.horizSensitivity / 100.)), 0);
+						.toRadians((GameApp.getInstance().mouseX - GameApp.getInstance().pmouseX)
+								* (this.horizSensitivity / 100.)),
+						0);
 			}
-			if (!this.vertLookLock && this.game.mouseY > 0) {
+			if (!this.vertLookLock && GameApp.getInstance().mouseY > 0) {
 				diff.add(0, -(float) Math
-						.toRadians((this.game.mouseY - this.game.pmouseY) * (this.vertSensitivity / 100.)));
+						.toRadians((GameApp.getInstance().mouseY - GameApp.getInstance().pmouseY)
+								* (this.vertSensitivity / 100.)));
 			}
 		}
 		return diff;

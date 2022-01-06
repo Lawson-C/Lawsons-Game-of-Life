@@ -5,7 +5,6 @@ import processing.core.PVector;
 import windows.GameApp;
 
 public class EpicCam {
-	protected GameApp game;
 	protected Controls controls;
 
 	protected float fov;
@@ -13,12 +12,11 @@ public class EpicCam {
 	protected PVector look = new PVector();
 	protected PVector camTran = new PVector();
 
-	public EpicCam(GameApp game, Controls controls) {
-		this(game, controls, new PVector(0, 0, 0));
+	public EpicCam(Controls controls) {
+		this(controls, new PVector(0, 0, 0));
 	}
 
-	public EpicCam(GameApp game, Controls controls, PVector pos) {
-		this.game = game;
+	public EpicCam(Controls controls, PVector pos) {
 		this.controls = controls;
 		this.position = new PVector().set(pos);
 		this.fov = PApplet.radians(110);
@@ -29,15 +27,15 @@ public class EpicCam {
 		this.aim();
 		this.camTran.z = this.controls.thirdPerson() ? 500 : 0;
 
-		this.game.camera(this.position.x + this.camTran.x, this.position.y + this.camTran.y,
+		GameApp.getInstance().camera(this.position.x + this.camTran.x, this.position.y + this.camTran.y,
 				this.position.z + this.camTran.z, this.position.x, this.position.y, this.position.z - 10, 0, 1, 0);
 		this.frust();
 
-		this.game.translate(this.position.x, this.position.y, this.position.z);
-		this.game.rotateX(this.look.y);
-		this.game.rotateZ(this.look.z);
-		this.game.rotateY(this.look.x);
-		this.game.translate(-this.position.x, -this.position.y, -this.position.z);
+		GameApp.getInstance().translate(this.position.x, this.position.y, this.position.z);
+		GameApp.getInstance().rotateX(this.look.y);
+		GameApp.getInstance().rotateZ(this.look.z);
+		GameApp.getInstance().rotateY(this.look.x);
+		GameApp.getInstance().translate(-this.position.x, -this.position.y, -this.position.z);
 		crossHair();
 	}
 
@@ -45,24 +43,24 @@ public class EpicCam {
 		float x, y, z = (float) .01;
 		x = z * PApplet.tan(this.fov / 2);
 		y = (9 * x) / 16;
-		this.game.frustum(-x, x, -y, y, z, 10000);
+		GameApp.getInstance().frustum(-x, x, -y, y, z, 10000);
 	}
 
 	void crossHair() {
-		this.game.pushMatrix();
+		GameApp.getInstance().pushMatrix();
 		PVector crossPos = this.lookVector().mult(2);
-		this.game.translate(this.position.x + this.camTran.x + crossPos.x,
+		GameApp.getInstance().translate(this.position.x + this.camTran.x + crossPos.x,
 				this.position.y + this.camTran.y + crossPos.y,
 				this.position.z + this.camTran.z + crossPos.z);
-		this.game.strokeWeight(5);
-		this.game.stroke(0, 255, 0);
-		this.game.line(0, 0, 0, (float) -.15);
-		this.game.stroke(255, 0, 0);
-		this.game.line(0, 0, (float) .15, 0);
-		this.game.stroke(0, 0, 255);
-		this.game.line(0, 0, 0, 0, 0, (float) .15);
-		this.game.popMatrix();
-		this.game.noCursor();
+		GameApp.getInstance().strokeWeight(5);
+		GameApp.getInstance().stroke(0, 255, 0);
+		GameApp.getInstance().line(0, 0, 0, (float) -.15);
+		GameApp.getInstance().stroke(255, 0, 0);
+		GameApp.getInstance().line(0, 0, (float) .15, 0);
+		GameApp.getInstance().stroke(0, 0, 255);
+		GameApp.getInstance().line(0, 0, 0, 0, 0, (float) .15);
+		GameApp.getInstance().popMatrix();
+		GameApp.getInstance().noCursor();
 	}
 
 	public void aim() {

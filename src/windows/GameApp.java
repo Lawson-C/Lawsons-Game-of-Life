@@ -4,35 +4,49 @@ import java.util.ArrayList;
 
 import game.character.Player;
 import game.worlds.World;
+import game.worlds.generators.Flat;
 import game.worlds.generators.Generator;
 import processing.core.PApplet;
 import util.lambdas.KeyEvent;
 import util.lambdas.MousePress;
 
 public class GameApp extends PApplet {
-    protected Player player;
-    protected World world;
-    protected Generator gen;
+    protected static GameApp singletonInstance;
 
-    protected ArrayList<KeyEvent> handlePress;
-    protected ArrayList<KeyEvent> handleRelease;
-    protected ArrayList<MousePress> handleMousePress;
-    protected ArrayList<MousePress> handleMouseRelease;
+    protected static Player player;
+    protected static World world;
+    protected static Generator gen;
 
-    public GameApp(Generator g) {
-        this.gen = g;
-        this.world = new World(this);
-        this.handlePress = new ArrayList<KeyEvent>();
-        this.handleRelease = new ArrayList<KeyEvent>();
-        this.handleMousePress = new ArrayList<MousePress>();
-        this.handleMouseRelease = new ArrayList<MousePress>();
-        super.runSketch();
-        // due to how processing works the rest of this constructor should be empty
+    protected static ArrayList<KeyEvent> handlePress;
+    protected static ArrayList<KeyEvent> handleRelease;
+    protected static ArrayList<MousePress> handleMousePress;
+    protected static ArrayList<MousePress> handleMouseRelease;
+
+    private GameApp() {
+    }
+
+    private static void init() {
+        gen = new Flat();
+        world = new World();
+        handlePress = new ArrayList<KeyEvent>();
+        handleRelease = new ArrayList<KeyEvent>();
+        handleMousePress = new ArrayList<MousePress>();
+        handleMouseRelease = new ArrayList<MousePress>();
+        singletonInstance.runSketch();
+        // due to how processing works the rest of this method should be empty
+    }
+
+    public static GameApp getInstance() {
+        if (singletonInstance == null) {
+            singletonInstance = new GameApp();
+            init();
+        }
+        return singletonInstance;
     }
 
     public void settings() {
         fullScreen(P3D, 0);
-        this.player = new Player(this, this.world.getSpawn());
+        player = new Player(world.getSpawn());
     }
 
     public void draw() {
@@ -49,58 +63,58 @@ public class GameApp extends PApplet {
     // key event handlers
 
     public void keyPressed() {
-        for (KeyEvent cb : this.handlePress) {
+        for (KeyEvent cb : handlePress) {
             cb.run(key);
         }
     }
 
     public void keyReleased() {
-        for (KeyEvent cb : this.handleRelease) {
+        for (KeyEvent cb : handleRelease) {
             cb.run(key);
         }
     }
 
-    public void addPressHandle(KeyEvent cb) {
-        this.handlePress.add(cb);
+    public static void addPressHandle(KeyEvent cb) {
+        handlePress.add(cb);
     }
 
-    public void addReleaseHandle(KeyEvent cb) {
-        this.handleRelease.add(cb);
+    public static void addReleaseHandle(KeyEvent cb) {
+        handleRelease.add(cb);
     }
 
     // mouse event handlers
 
     public void mousePressed() {
-        for (MousePress cb : this.handleMousePress) {
+        for (MousePress cb : handleMousePress) {
             cb.run(super.mouseButton);
         }
     }
 
     public void mouseReleased() {
-        for (MousePress cb : this.handleMouseRelease) {
+        for (MousePress cb : handleMouseRelease) {
             cb.run(super.mouseButton);
         }
     }
 
-    public void addPressHandle(MousePress cb) {
-        this.handleMousePress.add(cb);
+    public static void addPressHandle(MousePress cb) {
+        handleMousePress.add(cb);
     }
 
-    public void addReleaseHandle(MousePress cb) {
-        this.handleMouseRelease.add(cb);
+    public static void addReleaseHandle(MousePress cb) {
+        handleMouseRelease.add(cb);
     }
 
     // getters
 
     public Player getP1() {
-        return this.player;
+        return player;
     }
 
     public World getWorld() {
-        return this.world;
+        return world;
     }
 
     public Generator getGen() {
-        return this.gen;
+        return gen;
     }
 }

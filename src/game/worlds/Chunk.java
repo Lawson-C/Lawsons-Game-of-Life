@@ -1,23 +1,20 @@
 package game.worlds;
 
-import game.worlds.generators.Generator;
 import processing.core.PVector;
 import windows.GameApp;
 
 public class Chunk {
     public static final int width = 8, height = 16;
 
-    private GameApp game;
     private World world;
     private int indx, indz;
     private Block[][][] data;
 
-    public Chunk(World world, int indx, int indz, Generator g) {
-        this.game = world.game;
+    public Chunk(World world, int indx, int indz) {
         this.world = world;
         this.indx = indx;
         this.indz = indz;
-        this.data = g.makeChunk(this, this.world, indx, indz);
+        this.data = GameApp.getInstance().getGen().makeChunk(this, this.world, indx, indz);
     }
 
     /*
@@ -34,15 +31,15 @@ public class Chunk {
     }
 
     public void chunkStroke() {
-        this.game.pushMatrix();
-        this.game.noFill();
-        this.game.stroke(255, 0, 0);
-        this.game.strokeWeight(5);
+        GameApp.getInstance().pushMatrix();
+        GameApp.getInstance().noFill();
+        GameApp.getInstance().stroke(255, 0, 0);
+        GameApp.getInstance().strokeWeight(5);
         PVector coords = this.getRawCoords();
-        this.game.translate(coords.x + Chunk.rawWidth() / 2, coords.y + Chunk.rawHeight() / 2,
+        GameApp.getInstance().translate(coords.x + Chunk.rawWidth() / 2, coords.y + Chunk.rawHeight() / 2,
                 coords.z + Chunk.rawWidth() / 2);
-        this.game.box(Chunk.rawWidth(), Chunk.rawHeight(), Chunk.rawWidth());
-        this.game.popMatrix();
+        GameApp.getInstance().box(Chunk.rawWidth(), Chunk.rawHeight(), Chunk.rawWidth());
+        GameApp.getInstance().popMatrix();
     }
 
     public void updateStates(float[][][] s) {
@@ -69,10 +66,6 @@ public class Chunk {
 
     public Block getBlock(int x, int y, int z) {
         return this.data[x][y][z];
-    }
-
-    public GameApp getApplet() {
-        return this.game;
     }
 
     public World getWorld() {

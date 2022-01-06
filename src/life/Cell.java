@@ -1,8 +1,8 @@
 package life;
 
 import game.worlds.blockstates.StateRanges;
-import processing.core.PApplet;
 import processing.core.PVector;
+import windows.Life;
 
 public class Cell {
     static final int SIZE = 5;
@@ -10,12 +10,10 @@ public class Cell {
     protected double state;
     protected int[] index;
     protected PVector pos;
-    protected PApplet window;
     protected String type;
     protected int low;
 
-    public Cell(PApplet window, int indx, int indy, int indz, double state) {
-        this.window = window;
+    public Cell(int indx, int indy, int indz, double state) {
         this.index = new int[] { indx, indy, indz };
         this.state = state;
         this.pos = new PVector(indx * SIZE, indy * SIZE, indz * SIZE);
@@ -28,13 +26,14 @@ public class Cell {
         int y = this.index[1] * SIZE;
         int z = this.index[2] * SIZE;
 
-        this.window.pushMatrix();
-        this.window.translate(x + SIZE / 2 + this.window.width / 2, y + SIZE / 2 + this.window.height / 2,
+        Life.getInstance().pushMatrix();
+        Life.getInstance().translate(x + SIZE / 2 + Life.getInstance().width / 2,
+                y + SIZE / 2 + Life.getInstance().height / 2,
                 z + SIZE / 2);
-        this.window.noStroke();
-        this.window.fill(255 - (float) (this.state) * 127);
-        this.window.box(SIZE);
-        this.window.popMatrix();
+        Life.getInstance().noStroke();
+        Life.getInstance().fill(255 - (float) (this.state) * 127);
+        Life.getInstance().box(SIZE);
+        Life.getInstance().popMatrix();
     }
 
     public PVector getPos() {

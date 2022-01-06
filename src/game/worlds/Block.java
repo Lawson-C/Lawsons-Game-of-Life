@@ -9,7 +9,6 @@ import windows.GameApp;
 public abstract class Block {
     public static final int size = 100;
 
-    protected GameApp game;
     protected World world;
     protected Chunk hood;
     protected int indx, indy, indz; // indecies within chunk
@@ -17,7 +16,6 @@ public abstract class Block {
     protected float state;
 
     public Block(Chunk hood, int indx, int indy, int indz, float state) {
-        this.game = hood.getApplet();
         this.world = hood.getWorld();
         this.hood = hood;
         this.indx = indx;
@@ -33,7 +31,7 @@ public abstract class Block {
     public abstract void display();
 
     public void transPos() {
-        this.game.translate(this.pos.x + Block.size / 2, this.pos.y + Block.size / 2, this.pos.z + Block.size / 2);
+        GameApp.getInstance().translate(this.pos.x + Block.size / 2, this.pos.y + Block.size / 2, this.pos.z + Block.size / 2);
     }
 
     /*
@@ -44,10 +42,10 @@ public abstract class Block {
      * All this because I can't trust my future self...
      */
     public void blockMatrix() {
-        this.game.pushMatrix();
+        GameApp.getInstance().pushMatrix();
         transPos();
         display();
-        this.game.popMatrix();
+        GameApp.getInstance().popMatrix();
     }
 
     public void updateState(float s) {

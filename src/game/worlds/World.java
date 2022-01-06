@@ -11,49 +11,47 @@ public class World {
 
     protected volatile LoopGrid<Chunk> data;
 
-    protected GameApp game;
     protected PVector spawnPoint;
 
-    public World(GameApp game) {
-        this.game = game;
+    public World() {
         this.data = new LoopGrid<Chunk>(10, 10, 10, 10);
         int[] dim = this.data.size(); // dimensions of data grid
         for (int x = -dim[0]; x < dim[1]; x++) {
             for (int y = -dim[2]; y < dim[3]; y++) {
-                this.data.set(x, y, new Chunk(this, x, y, game.getGen()));
+                this.data.set(x, y, new Chunk(this, x, y));
             }
         }
     }
 
     public void renderBlocks() {
-        Block target = this.game.getP1().targetBlock();
+        Block target = GameApp.getInstance().getP1().targetBlock();
         this.forRenderBlocks((x, y, z) -> {
-            this.game.pushMatrix();
+            GameApp.getInstance().pushMatrix();
             Block b = this.getBlock(x, y, z);
-            this.game.translate((x + .5f) * Block.size, (y + .5f) * Block.size + Chunk.rawHeight(),
+            GameApp.getInstance().translate((x + .5f) * Block.size, (y + .5f) * Block.size + Chunk.rawHeight(),
                     (z + .5f) * Block.size);
             b.display();
             if (b == target) {
-                this.game.noFill();
-                this.game.strokeWeight(5);
-                this.game.stroke(255, 255, 0);
-                this.game.box(Block.size);
+                GameApp.getInstance().noFill();
+                GameApp.getInstance().strokeWeight(5);
+                GameApp.getInstance().stroke(255, 255, 0);
+                GameApp.getInstance().box(Block.size);
             }
-            this.game.popMatrix();
+            GameApp.getInstance().popMatrix();
         });
     }
 
     public void renderChunks() {
-        PVector center = this.game.getP1().getPos();
+        PVector center = GameApp.getInstance().getP1().getPos();
         center.x /= Chunk.rawWidth();
         center.z /= Chunk.rawWidth();
         for (int x = (int) (center.x - this.renderDist - 1); x <= center.x + this.renderDist; x++) {
             double minMax = Math.sqrt(Math.pow(this.renderDist, 2) - Math.pow(x, 2));
             for (int z = (int) (center.z - minMax); z <= center.z + minMax; z++) {
-                this.game.pushMatrix();
-                this.game.translate(x * Chunk.rawWidth(), Chunk.rawHeight(), z * Chunk.rawWidth());
+                GameApp.getInstance().pushMatrix();
+                GameApp.getInstance().translate(x * Chunk.rawWidth(), Chunk.rawHeight(), z * Chunk.rawWidth());
                 this.data.get(x, z).display();
-                this.game.popMatrix();
+                GameApp.getInstance().popMatrix();
             }
         }
     }
@@ -141,7 +139,7 @@ public class World {
      * function
      */
     public void forRenderBlocks(ThreeCoords cb) {
-        Player p1 = this.game.getP1();
+        Player p1 = GameApp.getInstance().getP1();
         double rad = this.renderDist * Chunk.width;
         double halfFov = p1.getFOV() / 2. + Math.PI / 8;
         double pangle = p1.lookAngle().x - Math.PI / 2;

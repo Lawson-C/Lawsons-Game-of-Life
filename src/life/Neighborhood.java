@@ -1,24 +1,22 @@
 package life;
 
 import life.patterns.Pattern;
-import processing.core.PApplet;
 import util.lambdas.ThreeCoords;
+import windows.Life;
 
 public class Neighborhood {
     protected final double radius = 1.5;
 
-    protected PApplet window;
     protected Cell[][][] cells;
 
-    public Neighborhood(PApplet window, Pattern p) {
-        this.window = window;
+    public Neighborhood(Pattern p) {
         int[] d = p.dim();
         this.cells = new Cell[d[0]][d[1]][d[2]];
         for (int x = 0; x < d[0]; x++) {
             for (int y = 0; y < d[1]; y++) {
                 for (int z = 0; z < d[2]; z++) {
                     double state = p.getState(x, y, z);
-                    this.cells[x][y][z] = new Cell(window, x, y, z, state);
+                    this.cells[x][y][z] = new Cell(x, y, z, state);
                 }
             }
         }
@@ -52,11 +50,11 @@ public class Neighborhood {
 
     public void display() {
         this.forEach((x, y, z) -> {
-            this.window.pushMatrix();
-            this.window.translate(-this.cells.length / 2 * Cell.SIZE, -this.cells[0].length / 2 * Cell.SIZE,
+            Life.getInstance().pushMatrix();
+            Life.getInstance().translate(-this.cells.length / 2 * Cell.SIZE, -this.cells[0].length / 2 * Cell.SIZE,
                     -this.cells[0][0].length / 2 * Cell.SIZE);
             this.cells[x][y][z].display();
-            this.window.popMatrix();
+            Life.getInstance().popMatrix();
         });
     }
 

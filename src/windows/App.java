@@ -1,22 +1,18 @@
 package windows;
 
 import game.worlds.World;
-import game.worlds.generators.Flat;
 import life.Cell;
 import life.Neighborhood;
 
 public class App {
-    public static GameApp game;
-    public static Life life;
-
     public static void main(String[] args) {
-        game = new GameApp(new Flat());
-        life = new Life(false);
+        GameApp.getInstance();
+        Life.getInstance();
     }
 
     public static void transferLife() {
-        World w = game.getWorld();
-        Neighborhood n = life.getNeighborhood();
+        World w = GameApp.getInstance().getWorld();
+        Neighborhood n = Life.getInstance().getNeighborhood();
         n.forEach((x, y, z) -> {
             Cell source = n.getCell(x, y, z);
             w.getBlock(x, y, z).updateState((float) source.relState());

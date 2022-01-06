@@ -5,14 +5,16 @@ import life.patterns.WorldTransfer;
 import processing.core.PApplet;
 
 public class Life extends PApplet {
-    protected volatile Neighborhood neighborhood;
+    protected static Life singletonInstance;
 
-    protected Thread updateThread;
-    protected boolean display;
+    protected static volatile Neighborhood neighborhood;
 
-    public Life(boolean display) {
-        neighborhood = new Neighborhood(this, new WorldTransfer(App.game.getWorld()));
-        this.display = display;
+    protected static Thread updateThread;
+    protected static boolean display;
+
+    private Life(boolean display) {
+        neighborhood = new Neighborhood(new WorldTransfer(GameApp.getInstance().getWorld()));
+        Life.display = display;
         if (display) {
             super.runSketch();
         }
@@ -48,10 +50,17 @@ public class Life extends PApplet {
     }
 
     public void mousePressed() {
-        this.neighborhood = new Neighborhood(this, new WorldTransfer(App.game.getWorld()));
+        neighborhood = new Neighborhood(new WorldTransfer(GameApp.getInstance().getWorld()));
     }
 
     public Neighborhood getNeighborhood() {
-        return this.neighborhood;
+        return neighborhood;
+    }
+
+    public static Life getInstance() {
+        if (singletonInstance == null) {
+            singletonInstance = new Life(false);
+        }
+        return singletonInstance;
     }
 }
