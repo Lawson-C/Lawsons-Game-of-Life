@@ -7,17 +7,17 @@ import util.lambdas.ThreeCoords;
 import windows.GameApp;
 
 public class World {
-    final protected double renderDist = 2; // measured in units of chunks
+    protected final double renderDist = 2; // measured in units of chunks
+    public static final int xLen = 6, zLen = 6; // must be even
 
     protected volatile LoopGrid<Chunk> data;
 
     protected PVector spawnPoint;
 
     public World() {
-        this.data = new LoopGrid<Chunk>(10, 10, 10, 10);
-        int[] dim = this.data.size(); // dimensions of data grid
-        for (int x = -dim[0]; x < dim[1]; x++) {
-            for (int y = -dim[2]; y < dim[3]; y++) {
+        this.data = new LoopGrid<Chunk>(xLen / 2, xLen / 2, zLen / 2, zLen / 2);
+        for (int x = -xLen / 2; x < xLen / 2; x++) {
+            for (int y = -zLen / 2; y < zLen / 2; y++) {
                 this.data.set(x, y, new Chunk(this, x, y));
             }
         }
@@ -115,16 +115,15 @@ public class World {
      * returns coordinates with consideration for the looped world
      */
     public PVector getWorldCoords(float x, float y, float z) {
-        int[] dim = this.data.size();
         if (x < 0) {
-            x %= dim[0] * Chunk.rawWidth() * 1.f;
+            x %= xLen / 2;
         } else {
-            x %= dim[1] * Chunk.rawWidth() * 1.f;
+            x %= xLen / 2;
         }
         if (z < 0) {
-            z %= dim[2] * Chunk.rawWidth() * 1.f;
+            z %= zLen / 2;
         } else {
-            z %= dim[3] * Chunk.rawWidth() * 1.f;
+            z %= zLen / 2;
         }
         return new PVector(x, y, z);
     }

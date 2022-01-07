@@ -15,7 +15,7 @@ public class GameApp extends PApplet {
 
     protected static Player player;
     protected static World world;
-    protected static Generator gen;
+    protected static Generator gen = new Flat();
 
     protected static ArrayList<KeyEvent> handlePress;
     protected static ArrayList<KeyEvent> handleRelease;
@@ -26,7 +26,6 @@ public class GameApp extends PApplet {
     }
 
     private static void init() {
-        gen = new Flat();
         world = new World();
         handlePress = new ArrayList<KeyEvent>();
         handleRelease = new ArrayList<KeyEvent>();
@@ -115,6 +114,10 @@ public class GameApp extends PApplet {
     }
 
     public Generator getGen() {
+        return gen;
+    }
+
+    public static Generator getStatGen() {
         return gen;
     }
 }

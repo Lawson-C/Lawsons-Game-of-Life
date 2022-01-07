@@ -14,7 +14,7 @@ public class Chunk {
         this.world = world;
         this.indx = indx;
         this.indz = indz;
-        this.data = GameApp.getInstance().getGen().makeChunk(this, this.world, indx, indz);
+        this.data = GameApp.getStatGen().makeChunk(this, this.world, indx, indz);
     }
 
     /*

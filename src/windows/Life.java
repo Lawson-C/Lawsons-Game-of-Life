@@ -1,7 +1,7 @@
 package windows;
 
 import life.Neighborhood;
-import life.patterns.WorldTransfer;
+import life.patterns.Generator;
 import processing.core.PApplet;
 
 public class Life extends PApplet {
@@ -13,7 +13,7 @@ public class Life extends PApplet {
     protected static boolean display;
 
     private Life(boolean display) {
-        neighborhood = new Neighborhood(new WorldTransfer(GameApp.getInstance().getWorld()));
+        neighborhood = initNeighborhood();
         Life.display = display;
         if (display) {
             super.runSketch();
@@ -22,7 +22,9 @@ public class Life extends PApplet {
             public void run() {
                 while (true) {
                     neighborhood.update();
-                    App.transferLife();
+                    if (GameApp.singletonInstance != null) {
+                        App.transferLife();
+                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -50,7 +52,11 @@ public class Life extends PApplet {
     }
 
     public void mousePressed() {
-        neighborhood = new Neighborhood(new WorldTransfer(GameApp.getInstance().getWorld()));
+        neighborhood = initNeighborhood();
+    }
+
+    private Neighborhood initNeighborhood() {
+        return new Neighborhood(new Generator());
     }
 
     public Neighborhood getNeighborhood() {
@@ -59,7 +65,7 @@ public class Life extends PApplet {
 
     public static Life getInstance() {
         if (singletonInstance == null) {
-            singletonInstance = new Life(false);
+            singletonInstance = new Life(true);
         }
         return singletonInstance;
     }
