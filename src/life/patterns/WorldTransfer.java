@@ -9,7 +9,7 @@ public class WorldTransfer extends Pattern {
     protected World world;
 
     public WorldTransfer(World world) {
-        super(world.getSize()[0] * Chunk.width, Chunk.height, world.getSize()[1] * Chunk.width);
+        super(World.xLen * Chunk.width, Chunk.height, World.zLen * Chunk.width);
         this.world = world;
         super.makeStateMap((x, y, z) -> {
             super.states[x][y][z] = this.mapState(x, y, z) + StateRanges.get(blockType(world.getBlock(x, y, z)));

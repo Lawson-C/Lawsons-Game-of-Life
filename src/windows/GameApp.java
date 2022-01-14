@@ -26,11 +26,11 @@ public class GameApp extends PApplet {
     }
 
     private static void init() {
-        world = new World();
         handlePress = new ArrayList<KeyEvent>();
         handleRelease = new ArrayList<KeyEvent>();
         handleMousePress = new ArrayList<MousePress>();
         handleMouseRelease = new ArrayList<MousePress>();
+        world = new World();
         singletonInstance.runSketch();
         // due to how processing works the rest of this method should be empty
     }

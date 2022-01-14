@@ -15,24 +15,20 @@ public class LoopGrid<T> extends Grid<T> {
 
     @Override
     public T get(int x, int y) {
-        while (x < -super.nx)
-            x += super.nx + super.px;
-        while (x >= super.px)
-            x -= super.nx + super.px;
-
-        while (y < -super.ny)
-            y += super.ny + super.py;
-        while (y >= super.py)
-            y -= super.ny + super.py;
-
+        x = (int) loopIndex(x, super.px, -super.nx);
+        y = (int) loopIndex(y, super.py, -super.ny);
         return super.get(x, y);
     }
 
-    public static int loopIndex(int i, int l) {
-        int round = (i / l + 1) * l; // ensures all negative numbers are now their positive
-                                             // equivalents
-        i += round; // -4 becomes n * l - 4, where n is unknown
-        i %= l; // n is removed
-        return Math.abs(i);
+    public static double loopIndex(double i, int upper) {
+        return loopIndex(i, upper, 0);
+    }
+
+    public static double loopIndex(double i, int upper, int lower) {
+        if (i >= lower && i < upper) {
+            return i;
+        }
+        double range = upper - lower;
+        return ((i - lower) % range + range) % range + lower;
     }
 }

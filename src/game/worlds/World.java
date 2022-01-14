@@ -7,8 +7,8 @@ import util.lambdas.ThreeCoords;
 import windows.GameApp;
 
 public class World {
-    protected final double renderDist = 2; // measured in units of chunks
-    public static final int xLen = 6, zLen = 6; // must be even
+    protected final double renderDist = 3; // measured in units of chunks
+    public static final int xLen = 4, zLen = 4; // must be even
 
     protected volatile LoopGrid<Chunk> data;
 
@@ -56,10 +56,6 @@ public class World {
         }
     }
 
-    public int[] getSize() {
-        return this.data.size(false);
-    }
-
     public PVector getSpawn() {
         return this.spawnPoint;
     }
@@ -73,14 +69,8 @@ public class World {
      */
     public Chunk getChunkRaw(float x, float z) {
         PVector p = this.getWorldCoords(x, z);
-        x = p.x / Chunk.rawWidth();
-        z = p.z / Chunk.rawWidth();
-        if (x < 0) {
-            x -= 1;
-        }
-        if (z < 0) {
-            z -= 1;
-        }
+        x = (int) Math.floor(p.x / Chunk.rawWidth());
+        z = (int) Math.floor(p.z / Chunk.rawWidth());
         return this.data.get((int) (x), (int) (z));
     }
 
@@ -92,11 +82,12 @@ public class World {
      * returns block based on world index (looped)
      */
     public Block getBlock(int x, int y, int z) {
-        int l = this.getSize()[0] * Chunk.width;
-        x = LoopGrid.loopIndex(x, l);
-        l = this.getSize()[1] * Chunk.width;
-        z = LoopGrid.loopIndex(z, l);
-        return this.data.get(x / Chunk.width, z / Chunk.width).getBlock(x % Chunk.width, y, z % Chunk.width);
+        x = (int) LoopGrid.loopIndex(x, xLen * Chunk.width / 2, -xLen * Chunk.width / 2);
+        z = (int) LoopGrid.loopIndex(z, zLen * Chunk.width / 2, -zLen * Chunk.width / 2);
+        int ix = (int) Math.floor(x / (float) Chunk.width);
+        int iz = (int) Math.floor(z / (float) Chunk.width);
+        return this.data.get(ix, iz).getBlock((int) LoopGrid.loopIndex(x, Chunk.width), y,
+                (int) LoopGrid.loopIndex(z, Chunk.width));
     }
 
     /*
@@ -115,22 +106,26 @@ public class World {
      * returns coordinates with consideration for the looped world
      */
     public PVector getWorldCoords(float x, float y, float z) {
-        if (x < 0) {
-            x %= xLen / 2;
-        } else {
-            x %= xLen / 2;
-        }
-        if (z < 0) {
-            z %= zLen / 2;
-        } else {
-            z %= zLen / 2;
-        }
+        x = (float) LoopGrid.loopIndex(x, rawWidth() / 2, -rawWidth() / 2);
+        z = (float) LoopGrid.loopIndex(z, rawLength() / 2, -rawLength() / 2);
         return new PVector(x, y, z);
     }
 
     // ignore y
     public PVector getWorldCoords(float x, float z) {
         return this.getWorldCoords(x, 0, z);
+    }
+
+    public int rawWidth() {
+        return xLen * Chunk.rawWidth();
+    }
+
+    public int rawHeight() {
+        return Chunk.rawHeight();
+    }
+
+    public int rawLength() {
+        return zLen * Chunk.rawWidth();
     }
 
     /*
@@ -144,7 +139,7 @@ public class World {
         double pangle = p1.lookAngle().x - Math.PI / 2;
         PVector playerPos = p1.getPos().div(Block.size);
         playerPos.add((float) (-4 * Math.cos(pangle)), 0, (float) (-4 * Math.sin(pangle)));
-        for (double x = -rad; x < rad; x++) {
+        for (double x = -rad; x <= rad; x++) {
             double zBound = Math.sqrt(Math.pow(rad, 2) - Math.pow(x, 2));
             for (double z = -zBound; z < zBound; z++) {
                 double low = pangle - halfFov;
@@ -165,7 +160,7 @@ public class World {
                 }
 
                 for (int y = 0; y < Chunk.height; y++) {
-                    cb.run((int) (x + playerPos.x), y, (int) (z + playerPos.z));
+                    cb.run((int) Math.floor(x + playerPos.x), y, (int) Math.floor(z + playerPos.z));
                 }
             }
         }
