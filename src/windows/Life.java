@@ -11,6 +11,7 @@ public class Life extends PApplet {
 
     protected static Thread updateThread;
     protected static boolean display;
+    protected static int zOff;
 
     private Life(boolean display) {
         neighborhood = initNeighborhood();
@@ -43,9 +44,9 @@ public class Life extends PApplet {
     public void draw() {
         background(0, 0, 255);
 
-        translate(width / 2, height / 2);
-        rotateY(map(mouseX, 0, width, -TAU, TAU));
+        translate(width / 2, height / 2, zOff);
         rotateX(-map(mouseY, 0, height, -TAU, TAU));
+        rotateY(map(mouseX, 0, width, -TAU, TAU));
         translate(-width / 2, -height / 2);
 
         neighborhood.display();
@@ -53,6 +54,15 @@ public class Life extends PApplet {
 
     public void mousePressed() {
         neighborhood = initNeighborhood();
+    }
+
+    public void keyPressed() {
+        if (keyCode == UP) {
+            zOff -= 5;
+        }
+        if (keyCode == DOWN) {
+            zOff += 5;
+        }
     }
 
     private Neighborhood initNeighborhood() {
@@ -65,7 +75,7 @@ public class Life extends PApplet {
 
     public static Life getInstance() {
         if (singletonInstance == null) {
-            singletonInstance = new Life(true);
+            singletonInstance = new Life(false);
         }
         return singletonInstance;
     }
