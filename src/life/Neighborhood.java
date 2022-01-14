@@ -33,15 +33,9 @@ public class Neighborhood {
                         int ty = (int) Math.abs((y + oy) % this.cells[tx].length);
                         int tz = (int) Math.abs((z + oz) % this.cells[tx][ty].length);
 
-                        if (this.cells[x][y][z].sameType(this.cells[tx][ty][tz])) {
-                            Cell c = this.cells[x][y][z];
-                            Cell c1 = this.cells[tx][ty][tz];
-                            double diff = c.getState() - c1.getState();
-                            double mag = 0.005 / Math.pow(radius, 3);
-
-                            c.addState(-diff * mag);
-                            c1.addState(diff * mag);
-                        }
+                        Cell c = this.cells[x][y][z];
+                        Cell c1 = this.cells[tx][ty][tz];
+                        c.interact(c1);
                     }
                 }
             }

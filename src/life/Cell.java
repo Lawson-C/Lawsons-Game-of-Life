@@ -44,11 +44,7 @@ public class Cell {
         return index;
     }
 
-    public double getState() {
-        return this.state;
-    }
-
-    public void setState(double state) {
+    protected void setState(double state) {
         if (state < low)
             state = low;
         if (state > low + 1)
@@ -56,8 +52,12 @@ public class Cell {
         this.state = state;
     }
 
-    public void addState(double inc) {
+    protected void addState(double inc) {
         this.setState(this.state + inc);
+    }
+
+    public double getState() {
+        return this.state;
     }
 
     public double relState() {
@@ -70,5 +70,16 @@ public class Cell {
 
     public boolean sameType(Cell c) {
         return this.type.equals(c.getType());
+    }
+
+    public void interact(Cell c) {
+        double diff = Math.abs(this.relState() - c.relState());
+        if (this.sameType(c) && this.relState() != c.relState()) {
+            this.addState(diff * .001 / 2. * -Math.signum(this.relState() - c.relState()));
+        } else if (this.low == 0 && c.low == 1) { // Air to Ground interaction
+            double mag = .0001;
+            this.addState(-diff * mag);
+            c.addState(diff * mag);
+        }
     }
 }
