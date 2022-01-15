@@ -31,7 +31,8 @@ public class Cell {
                 y + SIZE / 2 + Life.getInstance().height / 2,
                 z + SIZE / 2);
         Life.getInstance().noStroke();
-        Life.getInstance().fill(255 - (float) (this.state) * 127);
+        int wgt = 255 / StateRanges.keys.length;
+        Life.getInstance().fill(wgt * this.low + (float) this.state * wgt);
         Life.getInstance().box(SIZE);
         Life.getInstance().popMatrix();
     }
@@ -76,8 +77,16 @@ public class Cell {
         double diff = Math.abs(this.relState() - c.relState());
         if (this.sameType(c) && this.relState() != c.relState()) {
             this.addState(diff * .001 / 2. * -Math.signum(this.relState() - c.relState()));
-        } else if (this.low == 0 && c.low == 1) { // Air to Ground interaction
+        } else if (this.low == 2 && c.low == 1) { // Plant to Air
             double mag = .0001;
+            this.addState(-diff * mag);
+            c.addState(diff * mag);
+        } else if (this.low == 1 && c.low == 0) { // Air to Ground
+            double mag = .0001;
+            this.addState(-diff * mag);
+            c.addState(diff * mag);
+        } else if (this.low == 0 && c.low == 2) { // Ground to Plant
+            double mag = .1;
             this.addState(-diff * mag);
             c.addState(diff * mag);
         }
