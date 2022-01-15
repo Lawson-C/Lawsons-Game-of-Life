@@ -11,10 +11,17 @@ public class Plant extends Block {
 
     @Override
     public void display() {
+        GameApp.getInstance().pushMatrix();
         GameApp.getInstance().fill(0, 127 * this.state, 0);
         GameApp.getInstance().sphereDetail(3);
         GameApp.getInstance().sphere(Block.size / 4);
         GameApp.getInstance().translate(0, Block.size / 4);
         GameApp.getInstance().box(Block.size / 8, Block.size / 2, Block.size / 8);
+        GameApp.getInstance().popMatrix();
+    }
+
+    @Override
+    public float viscosity() {
+        return .1f;
     }
 }

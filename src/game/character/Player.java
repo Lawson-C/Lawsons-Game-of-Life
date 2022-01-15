@@ -36,11 +36,12 @@ public class Player {
 
     public void periodic() {
         float buffer = 0;
-        while (this.world.getBlockRaw(this.footPos().add(0, buffer, 0)) instanceof Air) {
+        while (this.world.getBlockRaw(this.footPos().add(0, buffer, 0)).viscosity() != 1) {
             buffer += Block.size / 2.;
         }
         this.floor = this.world.getBlockRaw(this.footPos().add(0, buffer)).getRawCoords().y;
         // strafing
+        float visc = 1 - this.world.getBlockRaw(this.getPos().add(0, Block.size)).viscosity();
         String move = this.controls.getMove();
         float power = this.controls.power();
         switch (move) {
@@ -61,23 +62,20 @@ public class Player {
                 break;
         }
         // jumping
+        if (this.midAir() || this.controls.getJump()) {
+            this.move.y += this.controls.getGravity();
+        }
         if (this.controls.getJump() && !this.midAir()) {
             this.move.y = -this.controls.jumpPower();
         }
+        this.move.mult(visc);
         this.collision();
         this.position.add(this.move);
         this.cam.update(this.position);
     }
 
     public void collision() {
-        // falling
-        if (this.position.y < this.floor - this.height) {
-            // nothing for now
-        }
         // landing
-        if (this.midAir() || this.controls.getJump()) {
-            this.move.y += this.controls.getGravity();
-        }
         if (this.position.y + this.move.y >= this.floor - this.height) {
             this.position.y = this.floor - this.height;
             this.controls.setJump(false);
@@ -88,13 +86,13 @@ public class Player {
         for (int lvl = 0; lvl <= 1; lvl++) {
             Block xBlock = this.world.getBlockRaw(
                     this.getPos().add(this.move.x + Math.signum(this.move.x) * buffer, lvl * Block.size));
-            if (!(xBlock instanceof Air)) {
+            if (xBlock.viscosity() == 1) {
                 this.position.x = xBlock.getCenter().x - (Block.size / 2.f + buffer) * Math.signum(this.move.x);
                 this.move.x = 0;
             }
             Block zBlock = this.world.getBlockRaw(
                     this.getPos().add(0, lvl * Block.size, this.move.z + Math.signum(this.move.z) * buffer));
-            if (!(zBlock instanceof Air)) {
+            if (zBlock.viscosity() == 1) {
                 this.position.z = zBlock.getCenter().z - (Block.size / 2.f + buffer) * Math.signum(this.move.z);
                 this.move.z = 0;
             }

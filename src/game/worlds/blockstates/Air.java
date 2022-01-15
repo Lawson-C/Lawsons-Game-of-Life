@@ -11,4 +11,9 @@ public class Air extends Block {
     @Override
     public void display() {
     }
+
+    @Override
+    public float viscosity() {
+        return 0;
+    }
 }

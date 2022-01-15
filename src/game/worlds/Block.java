@@ -30,8 +30,11 @@ public abstract class Block {
      */
     public abstract void display();
 
+    public abstract float viscosity();
+
     public void transPos() {
-        GameApp.getInstance().translate(this.pos.x + Block.size / 2, this.pos.y + Block.size / 2, this.pos.z + Block.size / 2);
+        GameApp.getInstance().translate(this.pos.x + Block.size / 2, this.pos.y + Block.size / 2,
+                this.pos.z + Block.size / 2);
     }
 
     /*
